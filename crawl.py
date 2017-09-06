@@ -6,7 +6,7 @@ import datetime
 import re
 import urllib2
 from dateutil import parser
-
+from TokenTransaction import TokenTransaction
 def get_html_by_url(url):
     # Your code where you can use urlopen
     opener = urllib2.build_opener()
@@ -15,15 +15,6 @@ def get_html_by_url(url):
     html = response.read()
     soup = BeautifulSoup(html, 'html.parser')
     return soup
-
-class TokenTransaction:
-  def __init__(self, token_name,tx_hash,timestamp,from_account,to_account,quantity):
-    self.token_name = token_name
-    self.tx_hash = tx_hash
-    self.timestamp = timestamp
-    self.from_account = from_account
-    self.to_account = to_account
-    self.quantity = quantity
 
 def get_transcripts_at_p(token_name,p):
   base_url = 'https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p={}'.format(p)
@@ -60,4 +51,17 @@ def get_transcripts_at_p(token_name,p):
     transactions.append(token_transaction)
   return transactions
 
-transactions = get_transcripts_at_p("0x",1)
+
+def write_to_csv(transactions):
+  csvoutput = open("0x.csv","w+")
+  csvoutput.write("Token_Name\ttxhash\ttimestamp\tfrom_account\tto_account quantity\n")
+  for t in transactions:
+    csvoutput.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(t.token_name,t.tx_hash,t.timestamp,t.from_account,t.to_account,t.quantity))
+  csvoutput.close()
+
+total = []
+for x in range(1,2452):
+  print(x)
+  transactions = get_transcripts_at_p("0x",x)
+  total = total + transactions
+write_to_csv(total)
