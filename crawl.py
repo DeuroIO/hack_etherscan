@@ -4,16 +4,15 @@ from re import sub
 from decimal import Decimal
 import datetime
 import re
-import urllib2
+from selenium import webdriver
 from dateutil import parser
 from model import TokenTransaction
+
 def get_html_by_url(url):
-    # Your code where you can use urlopen
-    opener = urllib2.build_opener()
-    opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-    response = opener.open(url)
-    html = response.read()
-    soup = BeautifulSoup(html, 'html.parser')
+    driver = webdriver.Chrome()
+    driver.get(url)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.close()
     return soup
 
 def get_transcripts_at_p(token_name,p):
@@ -60,7 +59,7 @@ def write_to_csv(transactions):
   csvoutput.close()
 
 total = []
-for x in range(1,2452):
+for x in range(1,2458):
   print(x)
   transactions = get_transcripts_at_p("0x",x)
   total = total + transactions
