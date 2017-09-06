@@ -6,8 +6,6 @@ import datetime
 import re
 import urllib2
 from dateutil import parser
-import sqlite3
-from sqlite3 import Error
 
 def get_html_by_url(url):
     # Your code where you can use urlopen
