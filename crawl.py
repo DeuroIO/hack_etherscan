@@ -6,7 +6,7 @@ import datetime
 import re
 import urllib2
 from dateutil import parser
-from TokenTransaction import TokenTransaction
+from model import TokenTransaction
 def get_html_by_url(url):
     # Your code where you can use urlopen
     opener = urllib2.build_opener()
