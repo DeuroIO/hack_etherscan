@@ -3,13 +3,10 @@ import sys
 from re import sub
 from decimal import Decimal
 import datetime
-import re
-from selenium import webdriver
 from dateutil import parser
 from model import TokenTransaction
-from pyvirtualdisplay import Display
-from selenium import webdriver
 import urllib2
+import multiprocessing
 
 def get_html_by_url(url):
     opener = urllib2.build_opener()
@@ -56,18 +53,26 @@ def get_transcripts_at_p(token_name,p):
 
 
 def write_to_csv(transactions):
-  csvoutput = open("0x.csv","w+")
-  csvoutput.write("Token_Name\ttxhash\ttimestamp\tfrom_account\tto_account quantity\n")
+  csvoutput = open("0x.csv","a")
   for t in transactions:
     csvoutput.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(t.token_name,t.tx_hash,t.timestamp,t.from_account,t.to_account,t.quantity))
   csvoutput.close()
 
-total = []
+
+num_worker_threads = 34
+pool = multiprocessing.Pool(processes=num_worker_threads)
+
+# add header
+csvoutput = open("0x.csv","w+")
+csvoutput.write("Token_Name\ttxhash\ttimestamp\tfrom_account\tto_account quantity\n")
+csvoutput.close()
+
 for x in range(1,2458):
-  print(x)
-  transactions = get_transcripts_at_p("0x",x)
-  total = total + transactions
-write_to_csv(total)
+  pool.apply_async(get_transcripts_at_p, args=("0x",x), callback=write_to_csv)
+
+pool.close()
+pool.join()
+
 
 #transactions = get_transcripts_at_p("0x",49)
 #for t in transactions:
