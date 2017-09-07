@@ -1,8 +1,4 @@
 from bs4 import BeautifulSoup
-import sys
-from re import sub
-from decimal import Decimal
-import datetime
 from dateutil import parser
 from model import TokenTransaction
 import urllib2
@@ -73,8 +69,3 @@ for x in range(1,2458):
 
 pool.close()
 pool.join()
-
-
-#transactions = get_transcripts_at_p("0x",49)
-#for t in transactions:
-#  print(t.quantity)
