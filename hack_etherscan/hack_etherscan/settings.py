@@ -15,7 +15,7 @@ import os
 # Django starts so that shared_task will use this app.
 
 # REDIS related settings
-REDIS_HOST = 'localhost'
+REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
@@ -35,7 +35,7 @@ SECRET_KEY = '%!=or)z6$wi^wf0i8#*n$u%jy%6&zf$)^b3^*07n$uqc%+=prf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.241.218.85']
 
 
 # Application definition
