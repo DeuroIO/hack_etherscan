@@ -7,12 +7,16 @@ import re
 from selenium import webdriver
 from dateutil import parser
 from model import TokenTransaction
+from pyvirtualdisplay import Display
+from selenium import webdriver
+import urllib2
 
 def get_html_by_url(url):
-    driver = webdriver.Chrome()
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    driver.close()
+    opener = urllib2.build_opener()
+    opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+    response = opener.open(url)
+    html = response.read()
+    soup = BeautifulSoup(html)
     return soup
 
 def get_transcripts_at_p(token_name,p):
@@ -64,3 +68,7 @@ for x in range(1,2458):
   transactions = get_transcripts_at_p("0x",x)
   total = total + transactions
 write_to_csv(total)
+
+#transactions = get_transcripts_at_p("0x",49)
+#for t in transactions:
+#  print(t.quantity)
