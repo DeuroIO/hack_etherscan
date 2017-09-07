@@ -55,7 +55,7 @@ def get_transcripts_at_p(token_name,p):
 def write_to_csv(transactions):
   csvoutput = open("0x.csv","a")
   for t in transactions:
-    csvoutput.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(t.token_name,t.tx_hash,t.timestamp,t.from_account,t.to_account,t.quantity))
+    csvoutput.write("{},{},{},{},{},{}\n".format(t.token_name,t.tx_hash,t.timestamp,t.from_account,t.to_account,t.quantity))
   csvoutput.close()
 
 
@@ -64,7 +64,7 @@ pool = multiprocessing.Pool(processes=num_worker_threads)
 
 # add header
 csvoutput = open("0x.csv","w+")
-csvoutput.write("Token_Name\ttxhash\ttimestamp\tfrom_account\tto_account quantity\n")
+csvoutput.write("Token_Name,txhash,timestamp,from_account,to_account,quantity\n")
 csvoutput.close()
 
 for x in range(1,2458):
