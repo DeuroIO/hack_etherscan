@@ -8,6 +8,7 @@ from model import TokenTransaction
 import urllib2
 import multiprocessing
 
+
 def get_html_by_url(url):
     opener = urllib2.build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
