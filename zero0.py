@@ -44,5 +44,8 @@ def generate_table(all_the_records,timestamp):
     test_date = parse_time_to_hour(timestamp)
     print(test_date)
     filtered_records = sorted(all_the_records[test_date],key=lambda x: x.quantity, reverse=True)[:50]
+
+    rank = 1
     for record in filtered_records:
-        print(record)
+        print("{}\t{}\t{}\t{}%".format(rank,record.to_account,str(record.quantity),record.quantity / 5000000))
+        rank += 1
