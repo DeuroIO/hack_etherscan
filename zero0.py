@@ -1,7 +1,8 @@
 import csv
 from dateutil import parser
 import datetime
-
+import locale
+locale.setlocale(locale.LC_ALL, 'en_US')
 def parse_time_to_hour(timestamp):
     old_date = parser.parse(timestamp)
     new_date = old_date.replace(minute=0, second=0)
@@ -47,5 +48,5 @@ def generate_table(all_the_records,timestamp):
 
     rank = 1
     for record in filtered_records:
-        print("{}\t{}\t{}\t{}%".format(rank,record.to_account,str(record.quantity),record.quantity / 5000000))
+        print("{}\t{}\t{}\t{}%".format(rank,record.to_account,locale.format("%d", int(record.quantity), grouping=True),record.quantity / 5000000))
         rank += 1
