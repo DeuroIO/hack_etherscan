@@ -5,7 +5,7 @@ import locale
 locale.setlocale(locale.LC_ALL, 'en_US')
 def parse_time_to_hour(timestamp):
     old_date = parser.parse(timestamp)
-    new_date = old_date.replace(minute=0, second=0)
+    new_date = old_date.replace(hour=0,minute=0, second=0)
     return new_date
 
 class TokenTransaction(object):
