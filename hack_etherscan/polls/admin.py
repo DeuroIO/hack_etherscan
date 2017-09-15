@@ -16,6 +16,9 @@ class TokenTransactionAdmin(admin.ModelAdmin):
     list_display = ('token_name','tx_hash','timestamp','from_account','to_account','quantity')
     search_fields = ['token_name',]
 
+
 admin.site.register(Token,TokenAdmin)
 admin.site.register(Account,AccountAdmin)
 admin.site.register(TokenTransaction,TokenTransactionAdmin)
+admin.site.register(TopTokenHolder)
+admin.site.register(TopTokenTransaction)

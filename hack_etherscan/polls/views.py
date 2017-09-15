@@ -5,7 +5,7 @@ import datetime
 # Create your views here.
 from .html_helper import get_html_by_url
 from .models import Token,TokenTransaction
-from .tasks import get_tokens_from_view_a_tokentxns_page,get_token_tx_from_a_page
+from .tasks import get_tokens_from_view_a_tokentxns_page,get_token_tx_from_a_page,calculate_today_top_stat
 
 #get all tokens from https://etherscan.io/tokens
 def get_tokens_from_view_tokens_page(request):
@@ -73,4 +73,5 @@ def get_0x_network_crowd_sale_data():
 
     threading.Timer(10.0, get_0x_network_crowd_sale_data).start() # called every minute
 
-get_0x_network_crowd_sale_data()
+#get_0x_network_crowd_sale_data()
+calculate_today_top_stat.delay(kyber_contract_address)
