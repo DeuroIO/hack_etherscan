@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.http import HttpResponse
-
+import datetime
 # Create your views here.
 from .html_helper import get_html_by_url
 from .models import Token,TokenTransaction
-from .tasks import get_tokens_from_view_a_tokentxns_page
+from .tasks import get_tokens_from_view_a_tokentxns_page,get_token_tx_from_a_page
 
 #get all tokens from https://etherscan.io/tokens
 def get_tokens_from_view_tokens_page(request):
@@ -58,15 +58,19 @@ def get_total_number_of_pages_for_a_token(contract_address):
 zero_x_contract_address = "0xe41d2489571d322189246dafa5ebde1f4699f498"
 kyber_contract_address = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200"
 
-def get_0x_network_crowd_sale_data(request):
+import threading
+def get_0x_network_crowd_sale_data():
 
     first_page = 1
 
     #check_the_last_page
-    last_page = get_total_number_of_pages_for_a_token(zero_x_contract_address) + 1
+    #last_page = get_total_number_of_pages_for_a_token(kyber_contract_address) + 1
+    before_start_time = datetime.datetime.now()
+    last_page = 10 
+    for x in range(first_page,last_page+1):
+        get_token_tx_from_a_page.delay("kyber",kyber_contract_address,x)
+    print("get_0x_network_crowd_sale_data {}: {}".format(last_page,datetime.datetime.now()-before_start_time))
 
-    for x in range(first_page,first_page+1):
-        transactions = get_transcripts_at_p("0x", zero_x_contract_address,first_page)
-        print(transactions[0])
+    threading.Timer(10.0, get_0x_network_crowd_sale_data).start() # called every minute
 
-    return HttpResponse("succesfully get_tokens_from_view_tokens_page")
+get_0x_network_crowd_sale_data()

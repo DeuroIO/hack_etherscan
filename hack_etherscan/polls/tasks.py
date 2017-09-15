@@ -3,6 +3,40 @@ from .models import Token,TokenTransaction, Account
 from dateutil import parser
 from celery.decorators import periodic_task,task
 from celery.task.schedules import crontab
+from .crawl import get_transcripts_at_p,get_html_by_url
+
+@task(name="get_token_tx_from_a_page")
+def get_token_tx_from_a_page(coin_name,contract_address,page_num):
+    transactions = get_transcripts_at_p(coin_name, contract_address,page_num)
+    for transaction in transactions:
+        (token_name,txhash,timestamp,from_account,to_account,quantity) = transaction
+        from_account_o = Account(gussed_name="", account_address=from_account)
+        to_account_o = Account(gussed_name="", account_address=to_account)
+
+        try:
+            from_account_o.save()
+        except:
+            pass
+
+        try:
+            to_account_o.save()
+        except:
+            pass
+
+        m_token = Token.objects.get(contract_address=contract_address)
+        m_from_account_o = Account.objects.get(account_address=from_account)
+        m_to_account_o = Account.objects.get(account_address=to_account)
+
+        transaction = TokenTransaction(token_name=m_token, tx_hash=txhash, timestamp=timestamp,
+                                       from_account=m_from_account_o, to_account=m_to_account_o,
+                                       quantity=float(quantity))
+
+        try:
+            transaction.save()
+        except:
+            pass
+    
+        
 
 #get all tokens from https://etherscan.io/tokentxns
 @task(name="get_tokens_from_view_a_tokentxns_page")
