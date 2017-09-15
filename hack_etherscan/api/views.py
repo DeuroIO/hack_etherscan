@@ -1,14 +1,30 @@
 # api/views.py
 
 from rest_framework import generics
-from .serializers import TokenTransactionSerializer
-from polls.models import TokenTransaction
+from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
+from polls.models import TopTokenHolder,TopTokenTransaction
+from dateutil import parser
 
-class CreateView(generics.ListCreateAPIView):
+class RetriveTopTokenHolderView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
-    queryset = TokenTransaction.objects.all()
-    serializer_class = TokenTransactionSerializer
+    queryset = TopTokenHolder.objects.all()
+    serializer_class = TopTokenHolderSerializer
+    lookup_url_kwarg = "time"
 
-    def perform_create(self, serializer):
-        """Save the post data when creating a new bucketlist."""
-        serializer.save()
+    def get_queryset(self):
+        timestamp_s = self.kwargs.get(self.lookup_url_kwarg)
+        timestamp = parser.parse(timestamp_s)
+        holders = TopTokenHolder.objects.filter(timestsamp=timestamp)
+        return holders
+
+class RetriveTopTokenTransactionView(generics.ListCreateAPIView):
+    """This class defines the create behavior of our rest api."""
+    queryset = TopTokenTransaction.objects.all()
+    serializer_class = TopTokenTransactionsSerializer
+    lookup_url_kwarg = "time"
+
+    def get_queryset(self):
+        timestamp_s = self.kwargs.get(self.lookup_url_kwarg)
+        timestamp = parser.parse(timestamp_s)
+        transactions = TopTokenTransaction.objects.filter(timestsamp=timestamp)
+        return transactions

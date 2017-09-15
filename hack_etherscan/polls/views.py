@@ -75,8 +75,7 @@ def get_kyber_network_crowd_sale_data():
 
 def calculate_kyber_top_stat():
     calculate_today_top_stat.delay(kyber_contract_address)
-    threading.Timer(60.0, get_0x_network_crowd_sale_data).start()
+    threading.Timer(60.0, calculate_kyber_top_stat).start()
 
 get_kyber_network_crowd_sale_data()
 calculate_today_top_stat(kyber_contract_address)
-
