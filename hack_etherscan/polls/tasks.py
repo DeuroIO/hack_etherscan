@@ -1,9 +1,10 @@
 from .html_helper import get_html_by_url
-from .models import Token,TokenTransaction, Account
+from .models import Token,TokenTransaction, Account,TopTokenTransaction,TopTokenHolder
 from dateutil import parser
 from celery.decorators import periodic_task,task
-from celery.task.schedules import crontab
 from .crawl import get_transcripts_at_p,get_html_by_url
+from datetime import datetime
+from collections import OrderedDict
 
 @task(name="get_token_tx_from_a_page")
 def get_token_tx_from_a_page(coin_name,contract_address,page_num):
@@ -35,8 +36,42 @@ def get_token_tx_from_a_page(coin_name,contract_address,page_num):
             transaction.save()
         except:
             pass
-    
-        
+
+@task(name="calculate today top stat")
+def calculate_today_top_stat(contract_address):
+
+    today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+    today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+    today = datetime.datetime.now.replace(hour=0,minute=0,second=0,millesecond=0)
+
+    m_token = Token.objects.get(contract_address=contract_address)
+    transactions = TokenTransaction.objects.get(token_name=m_token,timestamp__range=(today_min,today_max))
+
+    top_limit = 20
+
+    # top tx
+
+
+    # top token holder
+    current_account_balance_dict = dict()
+
+    for transaction in transactions:
+        transaction_amount = transaction.quantity
+        targeted_account = transaction.to_account
+
+        if targeted_account not in current_account_balance_dict:
+            current_account_balance_dict[targeted_account] = transaction_amount
+        else:
+            current_account_balance_dict[targeted_account] += transaction_amount
+
+    d_sorted_by_value = OrderedDict(sorted(current_account_balance_dict.items(), key=lambda x: x[1],reverse=True)[:top_limit])
+
+    top_token_holder = TopTokenHolder(token_name=m_token,timestsamp=today)
+    top_token_holder.save()
+    for account,amount in d_sorted_by_value:
+        account.top_token_holder = top_token_holder
+        account.top_amount = amount
+        account.save()
 
 #get all tokens from https://etherscan.io/tokentxns
 @task(name="get_tokens_from_view_a_tokentxns_page")
