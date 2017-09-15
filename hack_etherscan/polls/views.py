@@ -59,19 +59,24 @@ zero_x_contract_address = "0xe41d2489571d322189246dafa5ebde1f4699f498"
 kyber_contract_address = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200"
 
 import threading
-def get_0x_network_crowd_sale_data():
+def get_kyber_network_crowd_sale_data():
 
     first_page = 1
 
     #check_the_last_page
     #last_page = get_total_number_of_pages_for_a_token(kyber_contract_address) + 1
     before_start_time = datetime.datetime.now()
-    last_page = 10 
+    last_page = 2 
     for x in range(first_page,last_page+1):
         get_token_tx_from_a_page.delay("kyber",kyber_contract_address,x)
     print("get_0x_network_crowd_sale_data {}: {}".format(last_page,datetime.datetime.now()-before_start_time))
 
-    threading.Timer(10.0, get_0x_network_crowd_sale_data).start() # called every minute
+    threading.Timer(0.5, get_kyber_network_crowd_sale_data).start() # called every minute
 
-#get_0x_network_crowd_sale_data()
-calculate_today_top_stat.delay(kyber_contract_address)
+def calculate_kyber_top_stat():
+    calculate_today_top_stat.delay(kyber_contract_address)
+    threading.Timer(60.0, get_0x_network_crowd_sale_data).start()
+
+get_kyber_network_crowd_sale_data()
+calculate_today_top_stat(kyber_contract_address)
+

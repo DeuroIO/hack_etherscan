@@ -3,7 +3,7 @@ from .models import Token,TokenTransaction, Account,TopTokenTransaction,TopToken
 from dateutil import parser
 from celery.decorators import periodic_task,task
 from .crawl import get_transcripts_at_p,get_html_by_url
-from datetime import datetime
+import datetime
 from collections import OrderedDict
 
 @task(name="get_token_tx_from_a_page")
@@ -27,34 +27,48 @@ def get_token_tx_from_a_page(coin_name,contract_address,page_num):
         m_token = Token.objects.get(contract_address=contract_address)
         m_from_account_o = Account.objects.get(account_address=from_account)
         m_to_account_o = Account.objects.get(account_address=to_account)
-
+        try:
+            float_quantity = float(quantity)
+        except:
+            continue
         transaction = TokenTransaction(token_name=m_token, tx_hash=txhash, timestamp=timestamp,
                                        from_account=m_from_account_o, to_account=m_to_account_o,
-                                       quantity=float(quantity))
+                                       quantity=float_quantity)
 
         try:
             transaction.save()
         except:
             pass
-
-@task(name="calculate today top stat")
+@task(name="calculate_today_top_stat")
 def calculate_today_top_stat(contract_address):
 
     today_min = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
     today_max = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-    today = datetime.datetime.now.replace(hour=0,minute=0,second=0,millesecond=0)
+    today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
 
     m_token = Token.objects.get(contract_address=contract_address)
-    transactions = TokenTransaction.objects.get(token_name=m_token,timestamp__range=(today_min,today_max))
+    transactions = TokenTransaction.objects.filter(token_name=m_token,timestamp__range=(today_min,today_max)).order_by("-quantity")
 
     top_limit = 20
-
+    
+    before_top_tx_time = datetime.datetime.now()
     # top tx
+    top_txs = TopTokenTransaction.objects.filter(timestsamp=today,token_name=m_token)
+    if top_txs:
+        top_txs.delete()
+    print("delete old top_txs :{}".format(datetime.datetime.now()-before_top_tx_time))
 
+    before_tx_save = datetime.datetime.now()
+    rank = 1
+    for x in range(0,top_limit):
+        tx = TopTokenTransaction(token_name=m_token,timestsamp=today,transaction=transactions[x],rank=rank)
+        tx.save()
+        rank += 1
+    print("save tx :{}".format(datetime.datetime.now()-before_tx_save))
 
     # top token holder
     current_account_balance_dict = dict()
-
+    before_build_top_token_holder_dict = datetime.datetime.now()
     for transaction in transactions:
         transaction_amount = transaction.quantity
         targeted_account = transaction.to_account
@@ -63,15 +77,19 @@ def calculate_today_top_stat(contract_address):
             current_account_balance_dict[targeted_account] = transaction_amount
         else:
             current_account_balance_dict[targeted_account] += transaction_amount
+    sorted_current_account = sorted(current_account_balance_dict.items(), key=lambda x: x[1],reverse=True)
+    sorted_current_account = sorted_current_account[:top_limit]
+    print("build top_token_holder_dict:{}".format(datetime.datetime.now()-before_build_top_token_holder_dict))
 
-    d_sorted_by_value = OrderedDict(sorted(current_account_balance_dict.items(), key=lambda x: x[1],reverse=True)[:top_limit])
-
-    top_token_holder = TopTokenHolder(token_name=m_token,timestsamp=today)
-    top_token_holder.save()
-    for account,amount in d_sorted_by_value:
-        account.top_token_holder = top_token_holder
-        account.top_amount = amount
-        account.save()
+    holders = TopTokenHolder.objects.filter(timestsamp=today,token_name=m_token)
+    if holders:
+        holders.delete()
+    
+    rank = 1
+    for account,amount in sorted_current_account:
+        holder = TopTokenHolder(token_name=m_token,timestsamp=today,account=account,top_amount=amount,rank=rank)
+        holder.save()
+        rank += 1
 
 #get all tokens from https://etherscan.io/tokentxns
 @task(name="get_tokens_from_view_a_tokentxns_page")
