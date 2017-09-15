@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 # Create your views here.
 from .html_helper import get_html_by_url
-from .models import Token
+from .models import Token,TokenTransaction
 from .tasks import get_tokens_from_view_a_tokentxns_page
 
 #get all tokens from https://etherscan.io/tokens
@@ -43,5 +43,30 @@ def get_tokens_from_view_tokentxns_page(request):
         tmp_url = "{}?p={}".format(base_url,x)
         print(tmp_url)
         get_tokens_from_view_a_tokentxns_page.delay(tmp_url)
+
+    return HttpResponse("succesfully get_tokens_from_view_tokens_page")
+
+
+from .crawl import get_transcripts_at_p,get_html_by_url
+
+def get_total_number_of_pages_for_a_token(contract_address):
+    soup = get_html_by_url("https://etherscan.io/token/generic-tokentxns2?contractAddress={}".format(contract_address))
+    span_style = soup.find("span",{"style":"padding: 2px 4px 4px 3px; border: 1px solid #D4D4D4; line-height: 30px; background-color: #EAEAEA; margin-top: 2px; height: 2px;"})
+    second_b = span_style.findAll("b")[1].text
+    return int(second_b)
+
+zero_x_contract_address = "0xe41d2489571d322189246dafa5ebde1f4699f498"
+kyber_contract_address = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200"
+
+def get_0x_network_crowd_sale_data(request):
+
+    first_page = 1
+
+    #check_the_last_page
+    last_page = get_total_number_of_pages_for_a_token(zero_x_contract_address) + 1
+
+    for x in range(first_page,first_page+1):
+        transactions = get_transcripts_at_p("0x", zero_x_contract_address,first_page)
+        print(transactions[0])
 
     return HttpResponse("succesfully get_tokens_from_view_tokens_page")

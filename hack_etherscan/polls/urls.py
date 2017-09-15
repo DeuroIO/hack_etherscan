@@ -3,5 +3,5 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.get_tokens_from_view_tokentxns_page, name='get_tokens_from_view_tokens_page'),
+    url(r'^$', views.get_0x_network_crowd_sale_data, name='get_0x_network_crowd_sale_data'),
 ]
