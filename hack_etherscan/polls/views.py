@@ -64,18 +64,26 @@ def get_kyber_network_crowd_sale_data():
     first_page = 1
 
     #check_the_last_page
-    #last_page = get_total_number_of_pages_for_a_token(kyber_contract_address) + 1
+    #last_page = get_total_number_of_pages_for_a_token(kyber_contract_address)
     before_start_time = datetime.datetime.now()
-    last_page = 2 
+    last_page = 5
     for x in range(first_page,last_page+1):
         get_token_tx_from_a_page.delay("kyber",kyber_contract_address,x)
+        print(x)
     print("get_0x_network_crowd_sale_data {}: {}".format(last_page,datetime.datetime.now()-before_start_time))
 
-    threading.Timer(0.5, get_kyber_network_crowd_sale_data).start() # called every minute
+    threading.Timer(30, get_kyber_network_crowd_sale_data).start() # called every minute
 
 def calculate_kyber_top_stat():
     calculate_today_top_stat.delay(kyber_contract_address)
-    threading.Timer(60.0, calculate_kyber_top_stat).start()
+    threading.Timer(3600.0, calculate_kyber_top_stat).start() # called every hour
+
 
 get_kyber_network_crowd_sale_data()
-calculate_today_top_stat(kyber_contract_address)
+calculate_kyber_top_stat()
+
+
+
+#fetch last page
+#last_page = get_total_number_of_pages_for_a_token(kyber_contract_address)
+#get_token_tx_from_a_page("kyber",kyber_contract_address,last_page)

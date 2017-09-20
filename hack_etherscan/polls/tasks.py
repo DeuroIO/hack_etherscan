@@ -30,7 +30,8 @@ def get_token_tx_from_a_page(coin_name,contract_address,page_num):
         try:
             float_quantity = float(quantity)
         except:
-            continue
+            print(transaction)
+            float_quantity = 0.0
         transaction = TokenTransaction(token_name=m_token, tx_hash=txhash, timestamp=timestamp,
                                        from_account=m_from_account_o, to_account=m_to_account_o,
                                        quantity=float_quantity)
@@ -49,7 +50,7 @@ def calculate_today_top_stat(contract_address):
     m_token = Token.objects.get(contract_address=contract_address)
     transactions = TokenTransaction.objects.filter(token_name=m_token,timestamp__range=(today_min,today_max)).order_by("-quantity")
 
-    top_limit = 20
+    top_limit = 50
     
     before_top_tx_time = datetime.datetime.now()
     # top tx
@@ -60,7 +61,7 @@ def calculate_today_top_stat(contract_address):
 
     before_tx_save = datetime.datetime.now()
     rank = 1
-    for x in range(0,top_limit):
+    for x in range(0,min(top_limit,len(transactions))):
         tx = TopTokenTransaction(token_name=m_token,timestsamp=today,transaction=transactions[x],rank=rank)
         tx.save()
         rank += 1
@@ -68,15 +69,26 @@ def calculate_today_top_stat(contract_address):
 
     # top token holder
     current_account_balance_dict = dict()
+    balance_cache_set = set()
     before_build_top_token_holder_dict = datetime.datetime.now()
+    transactions = TokenTransaction.objects.filter(token_name=m_token)
     for transaction in transactions:
         transaction_amount = transaction.quantity
         targeted_account = transaction.to_account
 
-        if targeted_account not in current_account_balance_dict:
+        if targeted_account not in balance_cache_set:
+            balance_cache_set.add(targeted_account)
             current_account_balance_dict[targeted_account] = transaction_amount
         else:
             current_account_balance_dict[targeted_account] += transaction_amount
+        
+        from_account = transaction.from_account
+        if from_account not in balance_cache_set:
+            balance_cache_set.add(from_account)
+            current_account_balance_dict[from_account] = -transaction_amount
+        else:
+            current_account_balance_dict[from_account] -= transaction_amount
+
     sorted_current_account = sorted(current_account_balance_dict.items(), key=lambda x: x[1],reverse=True)
     sorted_current_account = sorted_current_account[:top_limit]
     print("build top_token_holder_dict:{}".format(datetime.datetime.now()-before_build_top_token_holder_dict))
