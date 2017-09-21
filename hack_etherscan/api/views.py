@@ -2,9 +2,10 @@
 
 from rest_framework import generics
 from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
-from polls.models import TopTokenHolder,TopTokenTransaction,Account
+from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token
 from dateutil import parser
 from django.http import JsonResponse,HttpResponse
+import requests
 
 class RetriveTopTokenHolderView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -41,3 +42,29 @@ def update_account(request,account):
     account_obj.gussed_name = memo
     account_obj.save()
     return JsonResponse({"status":"okay"})
+
+@csrf_exempt
+def add_token(request,token,token_name):
+    if token is None or token == "":
+        return JsonResponse({'status':'false','reason':'token not specified'},status=400)
+    if token_name is None or token_name == "":
+        return JsonResponse({'status': 'false', 'reason': 'token_name wrong'}, status=400)
+    etherscan_api_url = "https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress={}&apikey=B4IFQIJ88Z36UYYRUHVRPTZ46HZ2S3FCCV".format(token)
+    r = requests.get(etherscan_api_url)
+    json_result = r.json()
+    if json_result['result'] == "0":
+        return JsonResponse({'status': 'false','reason':'token not found on etherscan'}, status=400)
+    try:
+        Token.objects.get(contract_address=token)
+        return JsonResponse({"status": "okay"})
+    except:
+        token_obj = Token(coin_name=token_name,contract_address=token)
+        token_obj.save()
+        return JsonResponse({"status": "okay"})
+
+def get_all_tokens(request):
+    tokens = Token.objects.all()
+    results = []
+    for token in tokens:
+        results.append({"coin_name":token.coin_name,"contract_address":token.contract_address})
+    return JsonResponse({'results': results})

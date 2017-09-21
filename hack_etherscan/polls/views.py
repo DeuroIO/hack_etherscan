@@ -79,8 +79,8 @@ def calculate_kyber_top_stat():
     threading.Timer(3600.0, calculate_kyber_top_stat).start() # called every hour
 
 
-get_kyber_network_crowd_sale_data()
-calculate_kyber_top_stat()
+# get_kyber_network_crowd_sale_data()
+# calculate_kyber_top_stat()
 
 
 
