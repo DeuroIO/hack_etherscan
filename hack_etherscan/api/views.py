@@ -3,6 +3,7 @@
 from rest_framework import generics
 from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
 from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token
+from polls.views import get_all_transaction_data_for_a_token
 from dateutil import parser
 from django.http import JsonResponse,HttpResponse
 import requests
@@ -43,6 +44,8 @@ def update_account(request,account):
     account_obj.save()
     return JsonResponse({"status":"okay"})
 
+from django.core.exceptions import ObjectDoesNotExist
+
 @csrf_exempt
 def add_token(request,token,token_name):
     if token is None or token == "":
@@ -54,14 +57,21 @@ def add_token(request,token,token_name):
     json_result = r.json()
     if json_result['result'] == "0":
         return JsonResponse({'status': 'false','reason':'token not found on etherscan'}, status=400)
-    try:
-        Token.objects.get(contract_address=token)
-        return JsonResponse({"status": "okay"})
-    except:
-        token_obj = Token(coin_name=token_name,contract_address=token)
-        token_obj.save()
-        return JsonResponse({"status": "okay"})
 
+    error = False
+    try:
+        dummy = Token.objects.get(contract_address=token)
+        error = True
+    except ObjectDoesNotExist:
+        token_obj = Token(coin_name=token_name,contract_address=token)
+        token_obj.status = "fetching_all_data"
+        token_obj.save()
+        get_all_transaction_data_for_a_token(token_name,token)
+
+    if error:
+        return JsonResponse({"status": "false", 'reason': 'token already exists'})
+    else:
+        return JsonResponse({"status": "okay"})
 def get_all_tokens(request):
     tokens = Token.objects.all()
     results = []

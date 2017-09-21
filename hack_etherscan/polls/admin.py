@@ -4,7 +4,7 @@ from .models import *
 
 
 class TokenAdmin(admin.ModelAdmin):
-    list_display = ('coin_name','contract_address')
+    list_display = ('coin_name','contract_address','status')
     search_fields = ['coin_name','contract_address',]
 
 
@@ -14,7 +14,7 @@ class AccountAdmin(admin.ModelAdmin):
 
 class TokenTransactionAdmin(admin.ModelAdmin):
     list_display = ('token_name','tx_hash','timestamp','from_account','to_account','quantity')
-    search_fields = ['token_name',]
+    search_fields = ['token_name__coin_name',]
 
 
 admin.site.register(Token,TokenAdmin)

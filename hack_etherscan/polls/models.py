@@ -10,6 +10,7 @@ class Token(models.Model):
         return self.coin_name + " " + self.contract_address
     coin_name = models.CharField(max_length=1024)
     contract_address = models.CharField(max_length=1024,unique=True)
+    status = models.CharField(max_length=100)
 
 class Account(models.Model):
     def __str__(self):
@@ -28,6 +29,8 @@ class TokenTransaction(models.Model):
     quantity = models.FloatField()
 
 class TopTokenHolder(models.Model):
+    def __str__(self):
+        return str(self.rank) + " " + self.token_name.coin_name + " " + self.account.account_address + " : " + str(self.top_amount) + " at " + self.timestsamp.strftime("%Y-%m-%d")
     token_name = models.ForeignKey(Token)
     timestsamp = models.DateTimeField()
     account = models.ForeignKey(Account,null=True)
@@ -35,6 +38,8 @@ class TopTokenHolder(models.Model):
     rank = models.IntegerField(default=0)
 
 class TopTokenTransaction(models.Model):
+    def __str__(self):
+        return str(self.rank) + " " + self.token_name.coin_name + " : " + str(self.transaction.quantity) + " at " + self.timestsamp.strftime("%Y-%m-%d")
     token_name = models.ForeignKey(Token)
     timestsamp = models.DateTimeField()
     transaction = models.ForeignKey(TokenTransaction,null=True)

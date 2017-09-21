@@ -55,28 +55,55 @@ def get_total_number_of_pages_for_a_token(contract_address):
     second_b = span_style.findAll("b")[1].text
     return int(second_b)
 
-zero_x_contract_address = "0xe41d2489571d322189246dafa5ebde1f4699f498"
-kyber_contract_address = "0xdd974d5c2e2928dea5f71b9825b8b646686bd200"
 
 import threading
 def get_token_transaction_data_per_half_minute(token_name,contract_address):
 
     first_page = 1
-
-    #check_the_last_page
-    #last_page = get_total_number_of_pages_for_a_token(kyber_contract_address)
     before_start_time = datetime.datetime.now()
     last_page = 5
     for x in range(first_page,last_page+1):
-        # get_token_tx_from_a_page.delay(token_name,contract_address,x)
-        print(x)
+        get_token_tx_from_a_page.delay(token_name,contract_address,x)
+        print("{} : {}".format(token_name, x))
     print("get_token_transaction_data_per_half_minute for {} {}: {}".format(token_name,last_page,datetime.datetime.now()-before_start_time))
 
     threading.Timer(30, get_token_transaction_data_per_half_minute,(token_name,contract_address,)).start() # called every minute
+
+import time
+
+def get_all_transaction_data_for_a_token(token_name, contract_address):
+    # get the first_page & check_the_last_page
+    first_page = 1
+    last_page = get_total_number_of_pages_for_a_token(contract_address)
+    # last_page = 10
+
+    before_start_time = datetime.datetime.now()
+    for x in range(first_page, last_page + 1):
+        time.sleep(0.5)
+        print("{} : {}".format(token_name,x))
+        get_token_tx_from_a_page.delay(token_name, contract_address, x)
+
+    token_obj = Token.objects.get(coin_name=token_name, contract_address=contract_address)
+    token_obj.status = "half_minute_fetch"
+    token_obj.save()
+
+    # kick off the get_token_transaction_data_per_half_minute tasks
+    get_token_transaction_data_per_half_minute(token_name, contract_address)
+    # kick off the hourly_calculate_token_top_stat tasks
+    hourly_calculate_token_top_stat(contract_address)
+
+    print("get_all_transaction_data_for_a_token for {} {}: {}".format(token_name, last_page,
+                                                                      datetime.datetime.now() - before_start_time))
+
 
 def hourly_calculate_token_top_stat(contract_address):
     calculate_today_top_stat.delay(contract_address)
     threading.Timer(3600.0, hourly_calculate_token_top_stat,(contract_address,)).start() # called every hour
 
-get_token_transaction_data_per_half_minute("kyber",kyber_contract_address)
-hourly_calculate_token_top_stat(kyber_contract_address)
+def schedule_tasks_for_all_tokens():
+    potentials_tokens = Token.objects.exclude(status='fetching_all_data')
+    for token in potentials_tokens:
+        get_token_transaction_data_per_half_minute(token.coin_name,token.contract_address)
+        hourly_calculate_token_top_stat(token.contract_address)
+
+schedule_tasks_for_all_tokens()
