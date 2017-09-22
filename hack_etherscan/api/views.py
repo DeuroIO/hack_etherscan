@@ -12,24 +12,30 @@ class RetriveTopTokenHolderView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = TopTokenHolder.objects.all()
     serializer_class = TopTokenHolderSerializer
-    lookup_url_kwarg = "time"
+    lookup_url_kwarg_time = "time"
+    lookup_url_kwarg_token = "token"
 
     def get_queryset(self):
-        timestamp_s = self.kwargs.get(self.lookup_url_kwarg)
+        timestamp_s = self.kwargs.get(self.lookup_url_kwarg_time)
         timestamp = parser.parse(timestamp_s)
-        holders = TopTokenHolder.objects.filter(timestsamp=timestamp)
+        token_contract_address = self.kwargs.get(self.lookup_url_kwarg_token)
+        token_obj = Token.objects.get(contract_address=token_contract_address)
+        holders = TopTokenHolder.objects.filter(timestsamp=timestamp,token_name=token_obj)
         return holders
 
 class RetriveTopTokenTransactionView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = TopTokenTransaction.objects.all()
     serializer_class = TopTokenTransactionsSerializer
-    lookup_url_kwarg = "time"
+    lookup_url_kwarg_time = "time"
+    lookup_url_kwarg_token = "token"
 
     def get_queryset(self):
-        timestamp_s = self.kwargs.get(self.lookup_url_kwarg)
+        timestamp_s = self.kwargs.get(self.lookup_url_kwarg_time)
         timestamp = parser.parse(timestamp_s)
-        transactions = TopTokenTransaction.objects.filter(timestsamp=timestamp)
+        token_contract_address = self.kwargs.get(self.lookup_url_kwarg_token)
+        token_obj = Token.objects.get(contract_address=token_contract_address)
+        transactions = TopTokenTransaction.objects.filter(timestsamp=timestamp,token_name=token_obj)
         return transactions
 from django.views.decorators.csrf import csrf_exempt
 
