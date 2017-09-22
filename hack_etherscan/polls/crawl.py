@@ -7,7 +7,10 @@ def get_html_by_url(url):
     opener = build_opener()
     opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
     response = opener.open(url)
-    html = response.read()
+    html = response.read().decode("utf+8")
+    html_file = open("test.html","w+")
+    html_file.write(html)
+    html_file.close()
     soup = BeautifulSoup(html)
     return soup
 
