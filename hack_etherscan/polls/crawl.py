@@ -1,16 +1,16 @@
 from bs4 import BeautifulSoup
 from dateutil import parser
 from urllib.request import build_opener
+from pyvirtualdisplay import Display
+from selenium import webdriver
 
+display = Display(visible=0, size=(800, 600))
+display.start()
+browser = webdriver.Firefox()
 
 def get_html_by_url(url):
-    opener = build_opener()
-    opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-    response = opener.open(url)
-    html = response.read().decode("utf+8")
-    html_file = open("test.html","w+")
-    html_file.write(html)
-    html_file.close()
+    browser.get(url)
+    html = browser.find_element_by_xpath("//*").get_attribute('innerHTML')
     soup = BeautifulSoup(html)
     return soup
 

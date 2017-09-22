@@ -1,0 +1,101 @@
+1506109025537	geckodriver	INFO	geckodriver 0.19.0
+1506109025546	geckodriver	INFO	Listening on 127.0.0.1:39161
+1506109026853	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.GuxaBUFZduSf"
+1506109027563	addons.xpi	WARN	Error parsing extensions state: [Exception... "Component returned failure code: 0x80520012 (NS_ERROR_FILE_NOT_FOUND) [amIAddonManagerStartup.readStartupData]"  nsresult: "0x80520012 (NS_ERROR_FILE_NOT_FOUND)"  location: "JS frame :: resource://gre/modules/addons/XPIProvider.jsm :: loadExtensionState :: line 1596"  data: no] Stack trace: loadExtensionState()@resource://gre/modules/addons/XPIProvider.jsm:1596 < getInstallState()@resource://gre/modules/addons/XPIProvider.jsm:1631 < checkForChanges()@resource://gre/modules/addons/XPIProvider.jsm:3152 < startup()@resource://gre/modules/addons/XPIProvider.jsm:2246 < callProvider()@resource://gre/modules/AddonManager.jsm:271 < _startProvider()@resource://gre/modules/AddonManager.jsm:741 < startup()@resource://gre/modules/AddonManager.jsm:908 < startup()@resource://gre/modules/AddonManager.jsm:3122 < observe()@jar:file:///opt/firefox/omni.ja!/components/addonManager.js:65
+
+(firefox:11008): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109028355	Marionette	INFO	Enabled via --marionette
+
+(firefox:11008): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+
+(firefox:11008): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109031488	Marionette	INFO	Listening on port 43874
+1506109031794	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1506109031900	Marionette	DEBUG	loaded listener.js
+1506109032021	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1506109032699	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1506109032700	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15, line 75: TypeError: window.parent.document.getElementById(...) is null
+1506109033407	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15, line 71: TypeError: window.parent.document.getElementById(...) is null
+1506109033615	Marionette	DEBUG	Received DOM event "pageshow" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+
+(firefox:11008): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109247535	geckodriver	INFO	geckodriver 0.19.0
+1506109247540	geckodriver	INFO	Listening on 127.0.0.1:56230
+1506109248855	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.Xq8ZQ8UTUsXZ"
+1506109249586	addons.xpi	WARN	Error parsing extensions state: [Exception... "Component returned failure code: 0x80520012 (NS_ERROR_FILE_NOT_FOUND) [amIAddonManagerStartup.readStartupData]"  nsresult: "0x80520012 (NS_ERROR_FILE_NOT_FOUND)"  location: "JS frame :: resource://gre/modules/addons/XPIProvider.jsm :: loadExtensionState :: line 1596"  data: no] Stack trace: loadExtensionState()@resource://gre/modules/addons/XPIProvider.jsm:1596 < getInstallState()@resource://gre/modules/addons/XPIProvider.jsm:1631 < checkForChanges()@resource://gre/modules/addons/XPIProvider.jsm:3152 < startup()@resource://gre/modules/addons/XPIProvider.jsm:2246 < callProvider()@resource://gre/modules/AddonManager.jsm:271 < _startProvider()@resource://gre/modules/AddonManager.jsm:741 < startup()@resource://gre/modules/AddonManager.jsm:908 < startup()@resource://gre/modules/AddonManager.jsm:3122 < observe()@jar:file:///opt/firefox/omni.ja!/components/addonManager.js:65
+
+(firefox:11263): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109250527	Marionette	INFO	Enabled via --marionette
+
+(firefox:11263): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+
+(firefox:11263): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109253716	Marionette	INFO	Listening on port 36026
+1506109254036	Marionette	WARN	TLS certificate errors will be ignored for this session
+1506109254143	Marionette	DEBUG	loaded listener.js
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1506109254233	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1506109254901	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1506109254902	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15, line 75: TypeError: window.parent.document.getElementById(...) is null
+1506109255601	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15, line 71: TypeError: window.parent.document.getElementById(...) is null
+1506109255828	Marionette	DEBUG	Received DOM event "pageshow" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+1506109256272	Marionette	DEBUG	Received DOM event "beforeunload" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+1506109256841	Marionette	DEBUG	Received DOM event "pagehide" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+1506109256843	Marionette	DEBUG	Received DOM event "unload" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16, line 75: TypeError: window.parent.document.getElementById(...) is null
+1506109257340	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16, line 71: TypeError: window.parent.document.getElementById(...) is null
+1506109257381	Marionette	DEBUG	Received DOM event "pageshow" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16"
+
+(firefox:11263): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109351689	geckodriver	INFO	geckodriver 0.19.0
+1506109351698	geckodriver	INFO	Listening on 127.0.0.1:36817
+1506109353022	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-profile" "/tmp/rust_mozprofile.YLXbNma1Sz4y"
+1506109353705	addons.xpi	WARN	Error parsing extensions state: [Exception... "Component returned failure code: 0x80520012 (NS_ERROR_FILE_NOT_FOUND) [amIAddonManagerStartup.readStartupData]"  nsresult: "0x80520012 (NS_ERROR_FILE_NOT_FOUND)"  location: "JS frame :: resource://gre/modules/addons/XPIProvider.jsm :: loadExtensionState :: line 1596"  data: no] Stack trace: loadExtensionState()@resource://gre/modules/addons/XPIProvider.jsm:1596 < getInstallState()@resource://gre/modules/addons/XPIProvider.jsm:1631 < checkForChanges()@resource://gre/modules/addons/XPIProvider.jsm:3152 < startup()@resource://gre/modules/addons/XPIProvider.jsm:2246 < callProvider()@resource://gre/modules/AddonManager.jsm:271 < _startProvider()@resource://gre/modules/AddonManager.jsm:741 < startup()@resource://gre/modules/AddonManager.jsm:908 < startup()@resource://gre/modules/AddonManager.jsm:3122 < observe()@jar:file:///opt/firefox/omni.ja!/components/addonManager.js:65
+
+(firefox:11525): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109354489	Marionette	INFO	Enabled via --marionette
+
+(firefox:11525): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+
+(firefox:11525): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+
+(firefox:11525): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
+1506109357790	Marionette	INFO	Listening on port 39424
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1506109357924	Marionette	WARN	TLS certificate errors will be ignored for this session
+1506109358026	Marionette	DEBUG	loaded listener.js
+1506109358117	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1506109358856	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1506109358857	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15, line 75: TypeError: window.parent.document.getElementById(...) is null
+1506109359517	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15, line 71: TypeError: window.parent.document.getElementById(...) is null
+1506109359769	Marionette	DEBUG	Received DOM event "pageshow" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+1506109360187	Marionette	DEBUG	Received DOM event "beforeunload" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+1506109360753	Marionette	DEBUG	Received DOM event "pagehide" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+1506109360754	Marionette	DEBUG	Received DOM event "unload" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=15"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16, line 75: TypeError: window.parent.document.getElementById(...) is null
+1506109361304	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16"
+JavaScript error: https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16, line 71: TypeError: window.parent.document.getElementById(...) is null
+1506109361372	Marionette	DEBUG	Received DOM event "pageshow" for "https://etherscan.io/token/generic-tokentxns2?contractAddress=0xe41d2489571d322189246dafa5ebde1f4699f498&p=16"
+
+(firefox:11525): GConf-WARNING **: Client failed to connect to the D-BUS daemon:
+/usr/bin/dbus-launch terminated abnormally without any error message
