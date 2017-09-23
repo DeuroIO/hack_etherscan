@@ -1,14 +1,12 @@
 from bs4 import BeautifulSoup
 from dateutil import parser
-from urllib.request import build_opener,HTTPCookieProcessor
-from http.cookiejar import CookieJar
-cj = CookieJar()
-opener = build_opener(HTTPCookieProcessor(cj))
-opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+from selenium import webdriver
+
+browser = webdriver.Chrome('chromedriver')
 
 def get_html_by_url(url):
-    response = opener.open(url)
-    html = response.read().decode("utf+8")
+    browser.get(url)
+    html = browser.find_element_by_xpath("//*").get_attribute('innerHTML')
     soup = BeautifulSoup(html)
     return soup
 

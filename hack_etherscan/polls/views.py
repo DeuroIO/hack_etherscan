@@ -79,7 +79,7 @@ def get_all_transaction_data_for_a_token(token_name, contract_address):
 
     before_start_time = datetime.datetime.now()
     for x in range(first_page, last_page + 1):
-        time.sleep(0.5)
+        time.sleep(2)
         print("{} : {}".format(token_name,x))
         get_token_tx_from_a_page.delay(token_name, contract_address, x)
 
