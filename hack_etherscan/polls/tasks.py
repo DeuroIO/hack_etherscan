@@ -1,10 +1,10 @@
 from .html_helper import get_html_by_url
-from .models import Token,TokenTransaction, Account,TopTokenTransaction,TopTokenHolder
-from dateutil import parser
+from .models import *
 from celery.decorators import periodic_task,task
 from .crawl import get_transcripts_at_p,get_html_by_url
 import datetime
-from collections import OrderedDict
+import requests
+from dateutil import parser
 
 @task(name="get_token_tx_from_a_page")
 def get_token_tx_from_a_page(coin_name,contract_address,page_num):
@@ -51,7 +51,7 @@ def calculate_today_top_stat(contract_address):
     transactions = TokenTransaction.objects.filter(token_name=m_token,timestamp__range=(today_min,today_max)).order_by("-quantity")
 
     top_limit = 50
-    
+
     before_top_tx_time = datetime.datetime.now()
     # top tx
     top_txs = TopTokenTransaction.objects.filter(timestsamp=today,token_name=m_token)
@@ -81,7 +81,7 @@ def calculate_today_top_stat(contract_address):
             current_account_balance_dict[targeted_account] = transaction_amount
         else:
             current_account_balance_dict[targeted_account] += transaction_amount
-        
+
         from_account = transaction.from_account
         if from_account not in balance_cache_set:
             balance_cache_set.add(from_account)
@@ -96,7 +96,7 @@ def calculate_today_top_stat(contract_address):
     holders = TopTokenHolder.objects.filter(timestsamp=today,token_name=m_token)
     if holders:
         holders.delete()
-    
+
     rank = 1
     for account,amount in sorted_current_account:
         holder = TopTokenHolder(token_name=m_token,timestsamp=today,account=account,top_amount=amount,rank=rank)
@@ -186,3 +186,64 @@ def get_tokens_from_view_a_tokentxns_page(base_url):
             transaction.save()
         except:
             pass
+
+ether_delta_orders_api = "https://api.etherdelta.com/trades"
+@task(name="get_ether_delta_trade_for")
+def get_ether_delta_trade_for(contract_address,coin_name,page):
+  r = requests.get("{}/{}/{}".format(ether_delta_orders_api,contract_address,page))
+  arrs = r.json()
+  try:
+      token = Token.objects.get(contract_address=contract_address)
+  except:
+      token = Token(coin_name=coin_name,contract_address=contract_address,status="")
+      token.save()
+
+  for arr in arrs:
+      tx_hash = arr["txHash"]
+      tx_hash_obj = EtherTransactionHash(tx_hash=tx_hash)
+      try:
+          tx_hash_obj.save()
+      except:
+          continue
+      m_tx_hash_obj = EtherTransactionHash.objects.get(tx_hash=tx_hash)
+
+      date = arr["date"]
+      timestamp_obj = parser.parse(date)
+
+      price = float(arr["price"])
+
+      side = arr["side"]
+      is_buy = side == "buy"
+
+      amount = float(arr["amount"])
+      amount_base = float(arr["amountBase"])
+
+      buyer = arr["buyer"]
+      buyer_account = Account(gussed_name="", account_address=buyer)
+      try:
+          buyer_account.save()
+      except:
+          pass
+      m_buyer_account = Account.objects.get(account_address=buyer)
+
+      seller = arr["seller"]
+      seller_account = Account(gussed_name="", account_address=seller)
+      try:
+          seller_account.save()
+      except:
+          pass
+      m_seller_account = Account.objects.get(account_address=seller)
+
+      trade_obj = EtherDeltaTokenTrade(token_name=token,
+                                       tx_hash=m_tx_hash_obj,
+                                       timestamp=timestamp_obj,
+                                       price=price,
+                                       is_buy=is_buy,
+                                       amount=amount,
+                                       amount_base=amount_base,
+                                       buyer=m_buyer_account,
+                                       seller=m_seller_account)
+      try:
+          trade_obj.save()
+      except:
+          pass

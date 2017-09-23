@@ -7,6 +7,7 @@ from polls.views import get_all_transaction_data_for_a_token
 from dateutil import parser
 from django.http import JsonResponse,HttpResponse
 import requests
+from polls.tasks import get_ether_delta_trade_for
 
 class RetriveTopTokenHolderView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
@@ -84,3 +85,7 @@ def get_all_tokens(request):
     for token in tokens:
         results.append({"coin_name":token.coin_name,"contract_address":token.contract_address})
     return JsonResponse({'results': results})
+
+def get_etherdelta_orders(request,token,token_name,page):
+    get_ether_delta_trade_for.delay(token,token_name,page)
+    return JsonResponse({"status": "okay"})

@@ -106,4 +106,4 @@ def schedule_tasks_for_all_tokens():
         get_token_transaction_data_per_half_minute(token.coin_name,token.contract_address)
         hourly_calculate_token_top_stat(token.contract_address)
 
-schedule_tasks_for_all_tokens()
+#schedule_tasks_for_all_tokens()
