@@ -67,7 +67,7 @@ def get_token_transaction_data_per_half_minute(token_name,contract_address):
         print("{} : {}".format(token_name, x))
     print("get_token_transaction_data_per_half_minute for {} {}: {}".format(token_name,last_page,datetime.datetime.now()-before_start_time))
 
-    threading.Timer(30, get_token_transaction_data_per_half_minute,(token_name,contract_address,)).start() # called every minute
+    threading.Timer(10, get_token_transaction_data_per_half_minute,(token_name,contract_address,)).start() # called every minute
 
 import time
 
@@ -106,4 +106,4 @@ def schedule_tasks_for_all_tokens():
         get_token_transaction_data_per_half_minute(token.coin_name,token.contract_address)
         hourly_calculate_token_top_stat(token.contract_address)
 
-#schedule_tasks_for_all_tokens()
+schedule_tasks_for_all_tokens()
