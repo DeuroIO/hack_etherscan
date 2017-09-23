@@ -1,16 +1,14 @@
 from bs4 import BeautifulSoup
 from dateutil import parser
-from urllib.request import build_opener
-from pyvirtualdisplay import Display
-from selenium import webdriver
-
-display = Display(visible=0, size=(800, 600))
-display.start()
-browser = webdriver.Firefox()
+from urllib.request import build_opener,HTTPCookieProcessor
+from http.cookiejar import CookieJar
+cj = CookieJar()
+opener = build_opener(HTTPCookieProcessor(cj))
+opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 
 def get_html_by_url(url):
-    browser.get(url)
-    html = browser.find_element_by_xpath("//*").get_attribute('innerHTML')
+    response = opener.open(url)
+    html = response.read().decode("utf+8")
     soup = BeautifulSoup(html)
     return soup
 
