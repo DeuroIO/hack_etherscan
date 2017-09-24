@@ -3,6 +3,7 @@
 from rest_framework import generics
 from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
 from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token,ETHTransactoin
+from .models import *
 from polls.views import get_all_transaction_data_for_a_token
 from dateutil import parser
 from django.http import JsonResponse,HttpResponse
@@ -103,9 +104,16 @@ etherdelta_trade_address = "0x0a19b14a"
 eth_token_address = "0000000000000000000000000000000000000000000000000000000000000000"
 wei = 1000000000000000000
 
-def get_kyber_stat_on_etherdelta(request):
+from datetime import datetime
+import time
 
-    kyber_etherdelta_txs = ETHTransactoin.objects.filter(input__contains=kyber_contarct_address).filter(input__contains=etherdelta_trade_address)[:10]
+def get_kyber_stat_on_etherdelta(request,timestamp):
+    timestamp = parser.parse(timestamp)
+
+    kyber_etherdelta_txs = ETHTransactoin.objects.filter(input__contains=kyber_contarct_address).filter(input__contains=etherdelta_trade_address).filter(block_number__timestamp_gte=datetime.combine(timestamp,time.min))[:10]
+    kyber_token = Token.objects.get(contract_address="0xdd974d5c2e2928dea5f71b9825b8b646686bd200")
+
+    decoded_objs = []
     for tx in kyber_etherdelta_txs:
         input = tx.input[10:]
         assert(len(input)%64==0)
@@ -119,5 +127,17 @@ def get_kyber_stat_on_etherdelta(request):
             price = int(input_arrs[1],16) / int(input_arrs[3],16)
             print("seller {}: {}".format(tx.tx_hash.tx_hash,price))
         amount = int(input_arrs[-1],16) / wei
+        tx_hash = tx.tx_hash
+        decoded_objs.append([is_buyer,user_account,price,amount,tx_hash])
 
+    total_number_of_eth_buy = 0.0
+    total_number_of_eth_eth = 0.0
+    total_number_of_eth = 0.0
+    total_number_of_kyber = 0.0
+
+    sorted_decoded_objs = sorted(decoded_objs, key=lambda x: x[2], reverse=True)
+    for obj in sorted_decoded_objs:
+        print(obj)
+
+    # m_top_etherDelta_transaction = TopEtherDeltaTransaction(token_name=kyber_token,tx_hash=tx_hash,timestamp=timestamp,from_account=user_account,)
     return JsonResponse({"status": "ok","number":str(len(kyber_etherdelta_txs))})
