@@ -156,6 +156,8 @@ def get_kyber_stat_on_etherdelta(request,timestamp):
     try:
         old_top_etherdelta_txs = TopEtherDeltaTransaction.objects.filter(token_name=kyber_token,timestamp=timestamp)
         old_top_etherdelta_txs.delete()
+    except:
+        pass
 
     sorted_decoded_objs = sorted(decoded_objs, key=lambda x: x[3], reverse=True)[:50]
     for obj in sorted_decoded_objs:
