@@ -2,7 +2,7 @@
 
 from rest_framework import generics
 from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
-from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token
+from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token,ETHTransactoin
 from polls.views import get_all_transaction_data_for_a_token
 from dateutil import parser
 from django.http import JsonResponse,HttpResponse
@@ -96,3 +96,26 @@ def get_etherdelta_input_for_zerox(request):
         print(block_number)
         get_ether_delta_inout_for_zrx.apply_async([block_number])
     return JsonResponse({"status": "okay"})
+import re
+split_re = re.compile(r'.{1,64}')
+kyber_contarct_address = "000000000000000000000000e41d2489571d322189246dafa5ebde1f4699f498"
+etherdelta_trade_address = "0x0a19b14a"
+eth_token_address = "0000000000000000000000000000000000000000000000000000000000000000"
+
+def get_kyber_stat_on_etherdelta(request):
+
+    kyber_etherdelta_txs = ETHTransactoin.objects.filter(input__contains=kyber_contarct_address).filter(input__contains=etherdelta_trade_address)
+    for tx in kyber_etherdelta_txs:
+        input = tx.input[10:]
+        assert(len(input)%64==0)
+        input_arrs = split_re.findall(input)
+        is_buyer = input_arrs[0] == kyber_contarct_address
+        user_account = tx.from_account
+        if is_buyer:
+            price = int(input_arrs[3], 16) / int(input_arrs[1], 16)
+            print("buyer {}: {}".format(tx.tx_hash.tx_hash,price))
+        else:
+            print("seller {}: {}".format(tx.tx_hash.tx_hash,price))
+            price = int(input_arrs[1],16) / int(input_arrs[3],16)
+
+    return JsonResponse({"status": "ok","number":str(len(kyber_etherdelta_txs))})
