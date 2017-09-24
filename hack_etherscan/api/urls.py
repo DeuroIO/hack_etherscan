@@ -13,7 +13,7 @@ urlpatterns = {
     #etherdelta
     url(r'^get_etherdelta_input_for_zerox$', get_etherdelta_input_for_zerox, name="get_etherdelta_input_for_zerox"),
     #check web3 kyber etherdelta stat
-    url(r'^get_kyber_stat_on_etherdelta$', get_kyber_stat_on_etherdelta, name="get_kyber_stat_on_etherdelta")
+    url(r'^get_kyber_stat_on_etherdelta/(?P<timestamp>\d+)$', get_kyber_stat_on_etherdelta, name="get_kyber_stat_on_etherdelta")
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)
