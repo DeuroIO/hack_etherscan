@@ -86,9 +86,13 @@ def get_all_tokens(request):
         results.append({"coin_name":token.coin_name,"contract_address":token.contract_address})
     return JsonResponse({'results': results})
 
+from web3 import Web3, HTTPProvider, IPCProvider
+web3 = Web3(HTTPProvider('http://localhost:8545'))
+
 def get_etherdelta_input_for_zerox(request):
-    first_block = 4161334
-    last_block = first_block + 20
+    first_block = 4306700
+    last_block = web3.eth.blockNumber
     for block_number in range(first_block,last_block+1):
-        get_ether_delta_inout_for_zrx.delay(block_number)
+        print(block_number)
+        get_ether_delta_inout_for_zrx.apply_async([block_number])
     return JsonResponse({"status": "okay"})

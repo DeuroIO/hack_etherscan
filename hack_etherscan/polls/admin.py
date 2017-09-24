@@ -18,7 +18,7 @@ class TokenTransactionAdmin(admin.ModelAdmin):
 
 class ETHTransactoinAdmin(admin.ModelAdmin):
     list_display = ('tx_hash','block_number','from_account','to_account','input')
-    search_fields = ['tx_hash__tx_hash',]
+    search_fields = ['input',]
 
 admin.site.register(Token,TokenAdmin)
 admin.site.register(Account,AccountAdmin)

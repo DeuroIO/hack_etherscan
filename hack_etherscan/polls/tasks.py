@@ -190,10 +190,11 @@ from .web3_helper import getTransactionsByAccount
 #zero_x contract address
 ether_delta_account_address = "0x8d12a197cb00d4747a1fe03395095ce2a5cc6819"
 zero_x_contract_address = "000000000000000000000000e41d2489571d322189246dafa5ebde1f4699f498"
+kyber_contract_address = "000000000000000000000000dd974d5c2e2928dea5f71b9825b8b646686bd200"
 
 @task(name="get_ether_delta_inout_for_zrx")
 def get_ether_delta_inout_for_zrx(block_number):
-  arrs,timestamp_obj = getTransactionsByAccount(myaccount=ether_delta_account_address,token_address=zero_x_contract_address,block_number=block_number)
+  arrs,timestamp_obj = getTransactionsByAccount(myaccount=ether_delta_account_address,token_address=kyber_contract_address,block_number=block_number)
 
   try:
       block_obj = EtherBlock.objects.get(block_number=block_number)
@@ -202,7 +203,6 @@ def get_ether_delta_inout_for_zrx(block_number):
       block_obj.save()
 
   for arr in arrs:
-      print(arr)
       tx_hash = arr["hash"]
       tx_hash_obj = EtherTransactionHash(tx_hash=tx_hash)
       try:
