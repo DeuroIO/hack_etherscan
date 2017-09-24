@@ -98,24 +98,26 @@ def get_etherdelta_input_for_zerox(request):
     return JsonResponse({"status": "okay"})
 import re
 split_re = re.compile(r'.{1,64}')
-kyber_contarct_address = "000000000000000000000000e41d2489571d322189246dafa5ebde1f4699f498"
+kyber_contarct_address = "dd974d5c2e2928dea5f71b9825b8b646686bd200"
 etherdelta_trade_address = "0x0a19b14a"
 eth_token_address = "0000000000000000000000000000000000000000000000000000000000000000"
+wei = 1000000000000000000
 
 def get_kyber_stat_on_etherdelta(request):
 
-    kyber_etherdelta_txs = ETHTransactoin.objects.filter(input__contains=kyber_contarct_address).filter(input__contains=etherdelta_trade_address)
+    kyber_etherdelta_txs = ETHTransactoin.objects.filter(input__contains=kyber_contarct_address).filter(input__contains=etherdelta_trade_address)[:10]
     for tx in kyber_etherdelta_txs:
         input = tx.input[10:]
         assert(len(input)%64==0)
         input_arrs = split_re.findall(input)
-        is_buyer = input_arrs[0] == kyber_contarct_address
+        is_buyer = kyber_contarct_address in input_arrs[0]
         user_account = tx.from_account
         if is_buyer:
             price = int(input_arrs[3], 16) / int(input_arrs[1], 16)
             print("buyer {}: {}".format(tx.tx_hash.tx_hash,price))
         else:
-            print("seller {}: {}".format(tx.tx_hash.tx_hash,price))
             price = int(input_arrs[1],16) / int(input_arrs[3],16)
+            print("seller {}: {}".format(tx.tx_hash.tx_hash,price))
+        amount = int(input_arrs[-1],16) / wei
 
     return JsonResponse({"status": "ok","number":str(len(kyber_etherdelta_txs))})
