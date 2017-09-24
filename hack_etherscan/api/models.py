@@ -5,8 +5,10 @@ class EtherDeltaDailyStat(models.Model):
     def __str__(self):
         return self.token_name.coin_name + " " + self.avg_price + " at " + self.timestamp
     timestamp = models.DateTimeField()
-    total_buy = models.FloatField()
-    total_sell = models.FloatField()
+    total_eth_buy = models.FloatField()
+    total_eth_sell = models.FloatField()
+    total_kyber_buy = models.FloatField()
+    total_kyber_sell = models.FloatField()
     token_name = models.ForeignKey(Token)
     avg_price = models.FloatField()
 
@@ -20,3 +22,4 @@ class TopEtherDeltaTransaction(models.Model):
     eth_quantity = models.FloatField()
     token_quantity = models.FloatField()
     price = models.FloatField()
+    is_buyer = models.BooleanField()

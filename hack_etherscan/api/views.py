@@ -109,15 +109,14 @@ import time
 
 def get_kyber_stat_on_etherdelta(request,timestamp):
     timestamp = parser.parse(timestamp)
-    
+    timestamp = timestamp.replace(hour=0, minute=0, second=0, microsecond=0)
     kyber_etherdelta_txs = ETHTransactoin.objects.filter(input__contains=kyber_contarct_address).filter(input__contains=etherdelta_trade_address).filter(block_number__timestamp__year=timestamp.year,block_number__timestamp__month=timestamp.month,block_number__timestamp__day=timestamp.day)[:10]
     kyber_token = Token.objects.get(contract_address="0xdd974d5c2e2928dea5f71b9825b8b646686bd200")
 
     total_number_of_eth_buy = 0.0
     total_number_of_eth_sell = 0.0
-    total_number_of_eth = 0.0
-    total_number_of_kyber = 0.0
-
+    total_number_of_kyber_buy = 0.0
+    total_number_of_kyber_sell = 0.0
 
     decoded_objs = []
     for tx in kyber_etherdelta_txs:
@@ -131,23 +130,39 @@ def get_kyber_stat_on_etherdelta(request,timestamp):
             price = int(input_arrs[3], 16) / int(input_arrs[1], 16)
             eth_amount = kyber_amount * price
             total_number_of_eth_buy += eth_amount
+            total_number_of_kyber_buy += kyber_amount
             #print("buyer {}: {} {} KNC {} ETH".format(tx.tx_hash.tx_hash,price,amount,amount*price))
         else:
             price = int(input_arrs[1],16) / int(input_arrs[3],16)
             eth_amount = kyber_amount * price
             total_number_of_eth_sell += eth_amount
+            total_number_of_kyber_sell += kyber_amount
             #print("seller {}: {} {} KNC {} ETH".format(tx.tx_hash.tx_hash,price,amout,amount*price))
-        total_number_of_eth += eth_amount
-        total_number_of_kyber += kyber_amount
         tx_hash = tx.tx_hash
         decoded_objs.append([is_buyer,user_account,price,kyber_amount,tx_hash,eth_amount])
 
+    total_number_of_eth = total_number_of_eth_buy + total_number_of_eth_sell
+    total_number_of_kyber = total_number_of_kyber_buy + total_number_of_kyber_sell
 
-    
+    try:
+        old_stat = EtherDeltaDailyStat.objects.get(timestamp=timestamp,token_name=kyber_token)
+        old_stat.delete()
+    except:
+        pass
 
-    sorted_decoded_objs = sorted(decoded_objs, key=lambda x: x[3], reverse=True)
-    #for obj in sorted_decoded_objs:
-        
+    stat = EtherDeltaDailyStat(timestamp=timestamp,total_eth_buy=total_number_of_eth_buy,total_eth_sell=total_number_of_eth_sell,total_kyber_buy=total_number_of_kyber_buy,total_kyber_sell=total_number_of_kyber_sell,token_name=kyber_token,avg_price=(total_number_of_eth/total_number_of_kyber))
+    stat.save()
+
+    try:
+        old_top_etherdelta_txs = TopEtherDeltaTransaction.objects.filter(token_name=kyber_token,timestamp=timestamp)
+        old_top_etherdelta_txs.delete()
+
+    sorted_decoded_objs = sorted(decoded_objs, key=lambda x: x[3], reverse=True)[:50]
+    for obj in sorted_decoded_objs:
+        is_buyer, user_account, price, kyber_amount, tx_hash, eth_amount = obj
+        from_account = Account.objects.get(account_address=user_account)
+        top_tx = TopEtherDeltaTransaction(token_name=kyber_token,tx_hash=tx_hash,timestamp=timestamp,from_account=from_account,eth_quantity=eth_amount,token_quantity=kyber_amount,price=price,is_buyer=is_buyer)
+        top_tx.save()
 
     # m_top_etherDelta_transaction = TopEtherDeltaTransaction(token_name=kyber_token,tx_hash=tx_hash,timestamp=timestamp,from_account=user_account,)
     return JsonResponse({"status": "ok","number":str(len(kyber_etherdelta_txs))})
