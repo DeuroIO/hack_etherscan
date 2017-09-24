@@ -3,7 +3,6 @@ from .models import *
 from celery.decorators import periodic_task,task
 from .crawl import get_transcripts_at_p,get_html_by_url
 import datetime
-import requests
 from dateutil import parser
 
 @task(name="get_token_tx_from_a_page")
@@ -187,19 +186,24 @@ def get_tokens_from_view_a_tokentxns_page(base_url):
         except:
             pass
 
-ether_delta_orders_api = "https://api.etherdelta.com/trades"
-@task(name="get_ether_delta_trade_for")
-def get_ether_delta_trade_for(contract_address,coin_name,page):
-  r = requests.get("{}/{}/{}".format(ether_delta_orders_api,contract_address,page))
-  arrs = r.json()
+from .web3_helper import getTransactionsByAccount
+#zero_x contract address
+ether_delta_account_address = "0x8d12a197cb00d4747a1fe03395095ce2a5cc6819"
+zero_x_contract_address = "000000000000000000000000e41d2489571d322189246dafa5ebde1f4699f498"
+
+@task(name="get_ether_delta_inout_for_zrx")
+def get_ether_delta_inout_for_zrx(block_number):
+  arrs,timestamp_obj = getTransactionsByAccount(myaccount=ether_delta_account_address,token_address=zero_x_contract_address,block_number=block_number)
+
   try:
-      token = Token.objects.get(contract_address=contract_address)
+      block_obj = EtherBlock.objects.get(block_number=block_number)
   except:
-      token = Token(coin_name=coin_name,contract_address=contract_address,status="")
-      token.save()
+      block_obj = EtherBlock(block_number=block_number, timestamp=timestamp_obj)
+      block_obj.save()
 
   for arr in arrs:
-      tx_hash = arr["txHash"]
+      print(arr)
+      tx_hash = arr["hash"]
       tx_hash_obj = EtherTransactionHash(tx_hash=tx_hash)
       try:
           tx_hash_obj.save()
@@ -207,43 +211,39 @@ def get_ether_delta_trade_for(contract_address,coin_name,page):
           continue
       m_tx_hash_obj = EtherTransactionHash.objects.get(tx_hash=tx_hash)
 
-      date = arr["date"]
-      timestamp_obj = parser.parse(date)
+      nonce = float(arr["nonce"])
 
-      price = float(arr["price"])
-
-      side = arr["side"]
-      is_buy = side == "buy"
-
-      amount = float(arr["amount"])
-      amount_base = float(arr["amountBase"])
-
-      buyer = arr["buyer"]
-      buyer_account = Account(gussed_name="", account_address=buyer)
+      from_account_address = arr["from"]
+      from_account = Account(gussed_name="", account_address=from_account_address)
       try:
-          buyer_account.save()
+          from_account.save()
       except:
           pass
-      m_buyer_account = Account.objects.get(account_address=buyer)
+      m_from_account = Account.objects.get(account_address=from_account_address)
 
-      seller = arr["seller"]
-      seller_account = Account(gussed_name="", account_address=seller)
+      to_account_address = arr["to"]
+      to_account = Account(gussed_name="", account_address=to_account_address)
       try:
-          seller_account.save()
+          to_account.save()
       except:
           pass
-      m_seller_account = Account.objects.get(account_address=seller)
+      m_to_account = Account.objects.get(account_address=to_account_address)
 
-      trade_obj = EtherDeltaTokenTrade(token_name=token,
-                                       tx_hash=m_tx_hash_obj,
-                                       timestamp=timestamp_obj,
-                                       price=price,
-                                       is_buy=is_buy,
-                                       amount=amount,
-                                       amount_base=amount_base,
-                                       buyer=m_buyer_account,
-                                       seller=m_seller_account)
+      value = float(arr["value"])
+      gasPrice = float(arr["gasPrice"])
+      gas = float(arr["gas"])
+      input = arr['input']
+
+      transaction_obj = ETHTransactoin(tx_hash=m_tx_hash_obj,
+                                 nounce=nonce,
+                                 block_number=block_obj,
+                                 from_account=m_from_account,
+                                 to_account=m_to_account,
+                                 value=value,
+                                 gasPrice=gasPrice,
+                                 gas=gas,
+                                 input=input)
       try:
-          trade_obj.save()
+          transaction_obj.save()
       except:
           pass

@@ -2,7 +2,7 @@
 
 from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import RetriveTopTokenHolderView,RetriveTopTokenTransactionView,update_account,add_token,get_all_tokens,get_etherdelta_orders
+from .views import RetriveTopTokenHolderView,RetriveTopTokenTransactionView,update_account,add_token,get_all_tokens,get_etherdelta_input_for_zerox
 
 urlpatterns = {
     url(r'^topTokenHolders/(?P<time>\d+)/(?P<token>[\w\-]+)/$', RetriveTopTokenHolderView.as_view(), name="top_holder"),
@@ -11,7 +11,7 @@ urlpatterns = {
     url(r'^add_token/(?P<token>[\w\-]+)/(?P<token_name>[\w\-]+)$', add_token, name="add_token"),
     url(r'^get_all_tokens/$', get_all_tokens, name="get_all_tokens"),
     #etherdelta
-    url(r'^get_etherdelta_orders/(?P<token>[\w\-]+)/(?P<token_name>[\w\-]+)/(?P<page>\d+)$', get_etherdelta_orders, name="get_etherdelta_orders")
+    url(r'^get_etherdelta_input_for_zerox$', get_etherdelta_input_for_zerox, name="get_etherdelta_input_for_zerox")
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)
