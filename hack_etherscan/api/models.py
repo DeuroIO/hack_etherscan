@@ -3,7 +3,7 @@ from polls.models import Token,EtherTransactionHash,Account
 # Create your models here.
 class EtherDeltaDailyStat(models.Model):
     def __str__(self):
-        return self.token_name.coin_name + " " + self.avg_price + " at " + self.timestamp
+        return self.token_name.coin_name + " " + str(self.avg_price)
     timestamp = models.DateTimeField()
     total_eth_buy = models.FloatField()
     total_eth_sell = models.FloatField()
