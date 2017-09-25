@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from polls.models import TokenTransaction,Account,Token,TopTokenHolder,TopTokenTransaction
-
+from polls.models import TokenTransaction,Account,Token,TopTokenHolder,TopTokenTransaction,EtherTransactionHash
+from .models import *
 
 class TokenSerializer(serializers.ModelSerializer):
 
@@ -41,3 +41,30 @@ class TopTokenTransactionsSerializer(serializers.ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = TopTokenTransaction
         fields = ('token_name', 'timestsamp', 'transaction','rank')
+
+class EtherTransactionHashSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EtherTransactionHash
+        fields=  ('tx_hash',)
+
+
+class TopEtherDeltaTransactionsSerializer(serializers.ModelSerializer):
+    """Serializer to map the Model instance into JSON format."""
+    token_name = TokenSerializer()
+    from_account = AccountSerializer()
+    tx_hash = EtherTransactionHashSerializer()
+
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = TopEtherDeltaTransaction
+        fields = ('token_name', 'tx_hash', 'timestamp','from_account','eth_quantity','token_quantity','price','is_buyer')
+    
+    
+class EtherDeltaDailyStatSerializer(serializers.ModelSerializer):
+    token_name = TokenSerializer()
+
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = EtherDeltaDailyStat
+        fields = (
+        'token_name', 'timestamp', 'total_eth_buy', 'total_eth_sell', 'total_kyber_buy', 'total_kyber_sell', 'token_name', 'avg_price')

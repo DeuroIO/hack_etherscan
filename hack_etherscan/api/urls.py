@@ -2,7 +2,7 @@
 
 from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import RetriveTopTokenHolderView,RetriveTopTokenTransactionView,update_account,add_token,get_all_tokens,get_etherdelta_input_for_zerox,get_kyber_stat_on_etherdelta
+from .views import RetriveTopTokenHolderView,RetriveTopTokenTransactionView,update_account,add_token,get_all_tokens,get_etherdelta_input_for_zerox,get_kyber_stat_on_etherdelta,RetriveTopEtherDeltaTransactionView,RetriveEtherDeltaDailyStatView
 
 urlpatterns = {
     url(r'^topTokenHolders/(?P<time>\d+)/(?P<token>[\w\-]+)/$', RetriveTopTokenHolderView.as_view(), name="top_holder"),
@@ -13,7 +13,11 @@ urlpatterns = {
     #etherdelta
     url(r'^get_etherdelta_input_for_zerox$', get_etherdelta_input_for_zerox, name="get_etherdelta_input_for_zerox"),
     #check web3 kyber etherdelta stat
-    url(r'^get_kyber_stat_on_etherdelta/(?P<timestamp>\d+)$', get_kyber_stat_on_etherdelta, name="get_kyber_stat_on_etherdelta")
+    url(r'^get_kyber_stat_on_etherdelta/(?P<timestamp>\d+)$', get_kyber_stat_on_etherdelta, name="get_kyber_stat_on_etherdelta"),
+    url(r'^topEtherDeltaTransactions/(?P<time>\d+)/(?P<token>[\w\-]+)/$', RetriveTopEtherDeltaTransactionView.as_view(), name="topEtherDeltaTransactions"),
+    url(r'^retrive_etherDelta_daily_stat/(?P<time>\d+)/(?P<token>[\w\-]+)/$', RetriveEtherDeltaDailyStatView.as_view(),
+        name="retrive_etherDelta_daily_stat"),
+
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

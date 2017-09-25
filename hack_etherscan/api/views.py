@@ -1,7 +1,7 @@
 # api/views.py
 
 from rest_framework import generics
-from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
+from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer,TopEtherDeltaTransactionsSerializer,EtherDeltaDailyStatSerializer
 from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token,ETHTransactoin,EtherBlock
 from .models import *
 from polls.views import get_all_transaction_data_for_a_token
@@ -39,6 +39,7 @@ class RetriveTopTokenTransactionView(generics.ListCreateAPIView):
         token_obj = Token.objects.get(contract_address=token_contract_address)
         transactions = TopTokenTransaction.objects.filter(timestsamp=timestamp,token_name=token_obj)
         return transactions
+
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -177,3 +178,33 @@ def get_kyber_stat_on_etherdelta(request,timestamp):
 
     # m_top_etherDelta_transaction = TopEtherDeltaTransaction(token_name=kyber_token,tx_hash=tx_hash,timestamp=timestamp,from_account=user_account,)
     return JsonResponse({"status": "ok","number":str(len(kyber_etherdelta_txs))})
+
+class RetriveTopEtherDeltaTransactionView(generics.ListCreateAPIView):
+    """This class defines the create behavior of our rest api."""
+    queryset = TopEtherDeltaTransaction.objects.all()
+    serializer_class = TopEtherDeltaTransactionsSerializer
+    lookup_url_kwarg_time = "time"
+    lookup_url_kwarg_token = "token"
+
+    def get_queryset(self):
+        timestamp_s = self.kwargs.get(self.lookup_url_kwarg_time)
+        timestamp = parser.parse(timestamp_s)
+        token_contract_address = self.kwargs.get(self.lookup_url_kwarg_token)
+        token_obj = Token.objects.get(contract_address=token_contract_address)
+        transactions = TopEtherDeltaTransaction.objects.filter(timestamp=timestamp,token_name=token_obj).order_by('-eth_quantity')
+        return transactions
+
+class RetriveEtherDeltaDailyStatView(generics.ListCreateAPIView):
+    """This class defines the create behavior of our rest api."""
+    queryset = EtherDeltaDailyStat.objects.all()
+    serializer_class = EtherDeltaDailyStatSerializer
+    lookup_url_kwarg_time = "time"
+    lookup_url_kwarg_token = "token"
+
+    def get_queryset(self):
+        timestamp_s = self.kwargs.get(self.lookup_url_kwarg_time)
+        timestamp = parser.parse(timestamp_s)
+        token_contract_address = self.kwargs.get(self.lookup_url_kwarg_token)
+        token_obj = Token.objects.get(contract_address=token_contract_address)
+        stat = EtherDeltaDailyStat.objects.filter(timestamp=timestamp,token_name=token_obj)
+        return stat
