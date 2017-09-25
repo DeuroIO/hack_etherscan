@@ -133,21 +133,24 @@ def get_kyber_stat_on_etherdelta(request,timestamp):
             price = int(input_arrs[3], 16) / int(input_arrs[1], 16)
             kyber_amount = int(input_arrs[1],16) / wei
             eth_amount = kyber_amount * price
+            if eth_amount > wei:
+                eth_amount = eth_amount / wei
             total_number_of_eth_buy += eth_amount
             total_number_of_kyber_buy += kyber_amount
             #print("buyer {}: {} {} ETH".format(tx.tx_hash.tx_hash,price,eth_amount))
         else:
             price = int(input_arrs[1],16) / int(input_arrs[3],16)
             kyber_amount = int(input_arrs[3],16) / wei
+
             eth_amount = kyber_amount * price
+            if eth_amount > wei:
+                eth_amount = eth_amount / wei
             total_number_of_eth_sell += eth_amount
             total_number_of_kyber_sell += kyber_amount
             #print("seller {}: {} {} ETH".format(tx.tx_hash.tx_hash,price,eth_amount))
         tx_hash = tx.tx_hash
         decoded_objs.append([is_buyer,user_account,price,kyber_amount,tx_hash,eth_amount])
 
-    total_number_of_eth = total_number_of_eth_buy + total_number_of_eth_sell
-    total_number_of_kyber = total_number_of_kyber_buy + total_number_of_kyber_sell
 
     try:
         old_stat = EtherDeltaDailyStat.objects.get(timestamp=timestamp,token_name=kyber_token)
@@ -155,7 +158,9 @@ def get_kyber_stat_on_etherdelta(request,timestamp):
     except:
         pass
 
-    stat = EtherDeltaDailyStat(timestamp=timestamp,total_eth_buy=total_number_of_eth_buy,total_eth_sell=total_number_of_eth_sell,total_kyber_buy=total_number_of_kyber_buy,total_kyber_sell=total_number_of_kyber_sell,token_name=kyber_token,avg_price=(total_number_of_eth/total_number_of_kyber))
+    avg_buy_price = total_number_of_eth_buy / total_number_of_kyber_buy
+    avg_sell_price = total_number_of_eth_sell / total_number_of_kyber_sell
+    stat = EtherDeltaDailyStat(timestamp=timestamp,total_eth_buy=total_number_of_eth_buy,total_eth_sell=total_number_of_eth_sell,total_kyber_buy=total_number_of_kyber_buy,total_kyber_sell=total_number_of_kyber_sell,token_name=kyber_token,avg_buy_price=avg_buy_price,avg_sell_price=avg_sell_price)
     stat.save()
 
     try:
@@ -167,12 +172,7 @@ def get_kyber_stat_on_etherdelta(request,timestamp):
     sorted_decoded_objs = sorted(decoded_objs, key=lambda x: x[3], reverse=True)[:50]
     for obj in sorted_decoded_objs:
         is_buyer, user_account, price, kyber_amount, tx_hash, eth_amount = obj
-        try:
-            from_account = Account.objects.get(account_address=user_account)
-        except:
-            from_account = Account(account_address=user_account,gussed_name="")
-            from_account.save()
-
+        from_account = user_account
         top_tx = TopEtherDeltaTransaction(token_name=kyber_token,tx_hash=tx_hash,timestamp=timestamp,from_account=from_account,eth_quantity=eth_amount,token_quantity=kyber_amount,price=price,is_buyer=is_buyer)
         top_tx.save()
 

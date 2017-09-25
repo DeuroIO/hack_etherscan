@@ -67,4 +67,4 @@ class EtherDeltaDailyStatSerializer(serializers.ModelSerializer):
         """Meta class to map serializer's fields with the model fields."""
         model = EtherDeltaDailyStat
         fields = (
-        'token_name', 'timestamp', 'total_eth_buy', 'total_eth_sell', 'total_kyber_buy', 'total_kyber_sell', 'token_name', 'avg_price')
+        'token_name', 'timestamp', 'total_eth_buy', 'total_eth_sell', 'total_kyber_buy', 'total_kyber_sell', 'token_name', 'avg_buy_price','avg_sell_price')

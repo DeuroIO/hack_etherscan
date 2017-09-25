@@ -98,7 +98,7 @@ def get_all_transaction_data_for_a_token(token_name, contract_address):
 
 def hourly_calculate_token_top_stat(contract_address):
     calculate_today_top_stat.delay(contract_address)
-    threading.Timer(360, hourly_calculate_token_top_stat,(contract_address,)).start() # called every hour
+    threading.Timer(10, hourly_calculate_token_top_stat,(contract_address,)).start() # called every hour
 
 def schedule_tasks_for_all_tokens():
     potentials_tokens = Token.objects.exclude(status='fetching_all_data')
