@@ -2,7 +2,7 @@
 
 from rest_framework import generics
 from .serializers import TopTokenHolderSerializer,TopTokenTransactionsSerializer
-from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token,ETHTransactoin
+from polls.models import TopTokenHolder,TopTokenTransaction,Account,Token,ETHTransactoin,EtherBlock
 from .models import *
 from polls.views import get_all_transaction_data_for_a_token
 from dateutil import parser
@@ -89,9 +89,12 @@ def get_all_tokens(request):
 
 from web3 import Web3, HTTPProvider, IPCProvider
 web3 = Web3(HTTPProvider('http://localhost:8545'))
+from django.db.models import Max
 
 def get_etherdelta_input_for_zerox(request):
-    first_block = 4306700
+    blocks = EtherBlock.objects.all()
+    max_block = blocks.aggregate(Max('block_number'))
+    first_block = int(max_block["block_number__max"])
     last_block = web3.eth.blockNumber
     for block_number in range(first_block,last_block+1):
         print(block_number)
