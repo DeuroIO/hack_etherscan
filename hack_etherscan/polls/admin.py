@@ -20,6 +20,15 @@ class ETHTransactoinAdmin(admin.ModelAdmin):
     list_display = ('tx_hash','block_number','from_account','to_account','input')
     search_fields = ['input',]
 
+
+class ETHTransactoinAdmin(admin.ModelAdmin):
+    list_display = ('tx_hash','block_number','from_account','to_account','input')
+    search_fields = ['input',]
+
+
+class BINANCEETHAdmin(admin.ModelAdmin):
+    list_display = ('aggregate_id','price','quantity','is_buyer')
+
 admin.site.register(Token,TokenAdmin)
 admin.site.register(Account,AccountAdmin)
 admin.site.register(TokenTransaction,TokenTransactionAdmin)
@@ -28,3 +37,5 @@ admin.site.register(TopTokenTransaction)
 admin.site.register(EtherBlock)
 admin.site.register(ETHTransactoin,ETHTransactoinAdmin)
 admin.site.register(EtherTransactionHash)
+admin.site.register(BINANCE_ETH_Trade,BINANCEETHAdmin)
+admin.site.register(BINANCE_BTC_Trade,BINANCEETHAdmin)
