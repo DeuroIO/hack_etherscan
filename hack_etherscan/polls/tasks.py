@@ -39,6 +39,37 @@ def get_token_tx_from_a_page(coin_name,contract_address,page_num):
             transaction.save()
         except:
             pass
+
+import requests
+knc_btc = "https://www.binance.com/api/v1/aggTrades?&symbol=KNCBTC"
+knc_eth = "https://www.binance.com/api/v1/aggTrades?&symbol=KNCETH"
+
+def parse_binance_json(json):
+    return (float(json["a"]),float(json["p"]),float(json["q"]),parser.parse(json["T"]),json["m"] is True,json["M"] is True)
+
+@task(name="calculate_binance_trade")
+def calculate_binance_trade():
+    knc_btc_jsons = requests.get(knc_btc).json()
+    knc_eth_jsons = requests.get(knc_eth).json()
+
+    for knc_btc_json in knc_btc_jsons:
+        a,p,q,T,m,M = parse_binance_json(knc_btc_json)
+        obj = BINANCE_BTC_Trade(aggregate_id=a,price=p,quantity=q,first_trade_id=0.0,last_trade_Id=0.0,timestamp=T,is_buyer=m,best_price_match=M)
+        try:
+            obj.save()
+        except:
+            pass
+
+    for knc_btc_json in knc_btc_jsons:
+        a,p,q,T,m,M = parse_binance_json(knc_btc_json)
+        obj = BINANCE_BTC_Trade(aggregate_id=a,price=p,quantity=q,first_trade_id=0.0,last_trade_Id=0.0,timestamp=T,is_buyer=m,best_price_match=M)
+        try:
+            obj.save()
+        except:
+            pass
+
+
+calculate_binance_trade()
 @task(name="calculate_today_top_stat")
 def calculate_today_top_stat(contract_address):
 

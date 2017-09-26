@@ -28,6 +28,26 @@ class TokenTransaction(models.Model):
     to_account = models.ForeignKey(Account,null=True, related_name='to_account')
     quantity = models.FloatField()
 
+class BINANCE_ETH_Trade(models.Model):
+    aggregate_id = models.FloatField(unique=True)
+    price = models.FloatField()
+    quantity = models.FloatField()
+    first_trade_id = models.FloatField()
+    last_trade_Id = models.FloatField()
+    timestamp = models.DateTimeField()
+    is_buyer = models.BooleanField()
+    best_price_match = models.BooleanField()
+
+class BINANCE_BTC_Trade(models.Model):
+    aggregate_id = models.FloatField(unique=True)
+    price = models.FloatField()
+    quantity = models.FloatField()
+    first_trade_id = models.FloatField()
+    last_trade_Id = models.FloatField()
+    timestamp = models.DateTimeField()
+    is_buyer = models.BooleanField()
+    best_price_match = models.BooleanField()
+
 class TopTokenHolder(models.Model):
     def __str__(self):
         return str(self.rank) + " " + self.token_name.coin_name + " " + self.account.account_address + " : " + str(self.top_amount) + " at " + self.timestsamp.strftime("%Y-%m-%d")
