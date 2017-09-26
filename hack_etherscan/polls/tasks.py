@@ -68,8 +68,9 @@ def calculate_binance_trade():
         except:
             pass
 
-    for knc_btc_json in knc_eth_jsons:
-        a,p,q,T,m,M = parse_binance_json(knc_btc_json)
+    for knc_eth_json in knc_eth_jsons:
+        a,p,q,T,m,M = parse_binance_json(knc_eth_json)
+        # print(p)
         obj = BINANCE_ETH_Trade(aggregate_id=a,price=p,quantity=q,first_trade_id=0.0,last_trade_Id=0.0,timestamp=T,is_buyer=m,best_price_match=M)
         try:
             obj.save()

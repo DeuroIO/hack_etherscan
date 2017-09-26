@@ -115,6 +115,28 @@ const_task()
 
 
 def calculate_bian_stat():
+    kyber_eth_buys = BINANCE_BTC_Trade.objects.filter(is_buyer=True)
+    kyber_eth_sells = BINANCE_BTC_Trade.objects.filter(is_buyer=False)
+
+    total_eth_buy = 0.0
+    total_kyber_buy = 0.0
+    total_eth_sell = 0.0
+    total_kyber_sell = 0.0
+
+    for buy in kyber_eth_buys:
+        total_eth_buy += buy.price * buy.quantity
+        total_kyber_buy += buy.quantity
+
+    for sell in kyber_eth_sells:
+        total_eth_sell += sell.price * sell.quantity
+        total_kyber_sell += sell.quantity
+
+    print("total_BTC_buy:{}".format(total_eth_buy))
+    print("avg_BTC_buy_price:{}".format(total_eth_buy / total_kyber_buy))
+    print("total_BTC_sell:{}".format(total_eth_sell))
+    print("avg_BTC_sell_price:{}".format(total_eth_sell / total_kyber_sell))
+
+def calculate_bian_stat_eth():
     kyber_eth_buys = BINANCE_ETH_Trade.objects.filter(is_buyer=True)
     kyber_eth_sells = BINANCE_ETH_Trade.objects.filter(is_buyer=False)
 
@@ -133,8 +155,9 @@ def calculate_bian_stat():
 
     print("total_eth_buy:{}".format(total_eth_buy))
     print("avg_eth_buy_price:{}".format(total_eth_buy / total_kyber_buy))
-    print("total_eth_sell:{}".format(total_eth_buy))
+    print("total_eth_sell:{}".format(total_eth_sell))
     print("avg_eth_sell_price:{}".format(total_eth_sell / total_kyber_sell))
 
-
+calculate_bian_stat_eth()
 calculate_bian_stat()
+
