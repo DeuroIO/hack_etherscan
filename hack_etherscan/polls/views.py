@@ -5,7 +5,7 @@ import datetime
 # Create your views here.
 from .html_helper import get_html_by_url
 from .models import Token,TokenTransaction
-from .tasks import get_tokens_from_view_a_tokentxns_page,get_token_tx_from_a_page,calculate_today_top_stat
+from .tasks import get_tokens_from_view_a_tokentxns_page,get_token_tx_from_a_page,calculate_today_top_stat,calculate_binance_trade
 
 #get all tokens from https://etherscan.io/tokens
 def get_tokens_from_view_tokens_page(request):
@@ -106,4 +106,9 @@ def schedule_tasks_for_all_tokens():
         get_token_transaction_data_per_half_minute(token.coin_name,token.contract_address)
         hourly_calculate_token_top_stat(token.contract_address)
 
-schedule_tasks_for_all_tokens()
+#schedule_tasks_for_all_tokens()
+def const_task():
+    calculate_binance_trade.delay()
+    threading.Timer(10, const_task).start()  # called every hour
+
+const_task()

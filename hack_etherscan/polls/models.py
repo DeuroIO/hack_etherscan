@@ -30,7 +30,7 @@ class TokenTransaction(models.Model):
 
 class BINANCE_ETH_Trade(models.Model):
     aggregate_id = models.FloatField(unique=True)
-    price = models.FloatField()
+    price = models.IntegerField()
     quantity = models.FloatField()
     first_trade_id = models.FloatField()
     last_trade_Id = models.FloatField()
