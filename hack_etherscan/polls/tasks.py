@@ -43,10 +43,11 @@ def get_token_tx_from_a_page(coin_name,contract_address,page_num):
 import requests
 knc_btc = "https://www.binance.com/api/v1/aggTrades?&symbol=KNCBTC"
 knc_eth = "https://www.binance.com/api/v1/aggTrades?&symbol=KNCETH"
+from decimal import *
 
 def parse_binance_json(json):
     a = json["a"]
-    p = float(json["p"])
+    p = Decimal(json["p"])
     q = float(json["q"])
     T = datetime.datetime.fromtimestamp(
         json["T"] / 1000)

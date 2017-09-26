@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import datetime
 # Create your views here.
 from .html_helper import get_html_by_url
-from .models import Token,TokenTransaction
+from .models import *
 from .tasks import get_tokens_from_view_a_tokentxns_page,get_token_tx_from_a_page,calculate_today_top_stat,calculate_binance_trade
 
 #get all tokens from https://etherscan.io/tokens
@@ -112,3 +112,29 @@ def const_task():
     threading.Timer(10, const_task).start()  # called every hour
 
 const_task()
+
+
+def calculate_bian_stat():
+    kyber_eth_buys = BINANCE_ETH_Trade.objects.filter(is_buyer=True)
+    kyber_eth_sells = BINANCE_ETH_Trade.objects.filter(is_buyer=False)
+
+    total_eth_buy = 0.0
+    total_kyber_buy = 0.0
+    total_eth_sell = 0.0
+    total_kyber_sell = 0.0
+
+    for buy in kyber_eth_buys:
+        total_eth_buy += buy.price * buy.quantity
+        total_kyber_buy += buy.quantity
+
+    for sell in kyber_eth_sells:
+        total_eth_sell += sell.price * sell.quantity
+        total_kyber_sell += sell.quantity
+
+    print("total_eth_buy:{}".format(total_eth_buy))
+    print("avg_eth_buy_price:{}".format(total_eth_buy / total_kyber_buy))
+    print("total_eth_sell:{}".format(total_eth_buy))
+    print("avg_eth_sell_price:{}".format(total_eth_sell / total_kyber_sell))
+
+
+calculate_bian_stat()
