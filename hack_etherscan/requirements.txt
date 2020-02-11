@@ -51,7 +51,7 @@ dask==0.14.1
 datashape==0.5.4
 decorator==4.0.11
 dill==0.2.5
-Django==1.11.4
+Django==1.11.28
 django-async==0.7.3
 django-bootstrap3==8.2.3
 django-ckeditor==5.3.0
