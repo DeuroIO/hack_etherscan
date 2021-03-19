@@ -62,7 +62,7 @@ django-froala-editor==2.6.4
 django-js-asset==0.1.1
 django-realtime==1.1
 django-tinymce==2.6.0
-djangorestframework==3.6.4
+djangorestframework==3.11.2
 docker-py==1.10.3
 docker-pycreds==0.2.1
 docutils==0.13.1
