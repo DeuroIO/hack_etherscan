@@ -165,7 +165,7 @@ psdash==0.6.2
 psutil==5.2.1
 psycopg2==2.6.2
 ptyprocess==0.5.1
-py==1.4.33
+py==1.10.0
 pyasn1==0.2.3
 pyasn1-modules==0.0.8
 pycosat==0.6.2
