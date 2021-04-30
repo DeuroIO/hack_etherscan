@@ -197,7 +197,7 @@ reload==0.9
 requests==2.18.4
 rlp==0.6.0
 rope-py3k==0.9.4.post1
-rsa==3.4.2
+rsa==4.7
 ruamel.yaml==0.14.12
 s3transfer==0.1.10
 scikit-image==0.12.3
