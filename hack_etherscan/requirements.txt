@@ -75,7 +75,7 @@ fastcache==1.0.2
 fastzbarlight==0.0.14
 Flask==0.10.1
 Flask-Bcrypt==0.7.1
-Flask-Cors==3.0.2
+Flask-Cors==3.0.9
 Flask-Login==0.2.9
 Flask-Mail==0.9.1
 Flask-Migrate==2.0.2
