@@ -238,7 +238,7 @@ txaio==2.8.0
 ujson==1.35
 unicodecsv==0.14.1
 uritemplate==3.0.0
-urllib3==1.22
+urllib3==1.26.5
 vext==0.6.8
 vext.gi==0.6.8
 vine==1.1.3
