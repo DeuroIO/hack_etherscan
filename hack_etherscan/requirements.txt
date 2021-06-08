@@ -156,7 +156,7 @@ patsy==0.4.1
 pep8==1.7.0
 pexpect==4.2.1
 pickleshare==0.7.4
-Pillow==4.1.1
+Pillow==8.2.0
 plotly==2.0.15
 ply==3.10
 prompt-toolkit==1.0.13
