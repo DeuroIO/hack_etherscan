@@ -16,7 +16,7 @@ Authomatic==0.1.0.post1
 autobahn==17.6.2
 Automat==0.6.0
 awscli==1.11.125
-Babel==2.3.4
+Babel==2.9.1
 backports.shutil-get-terminal-size==1.0.0
 bcrypt==3.1.2
 beautifulsoup4==4.5.3
