@@ -160,7 +160,7 @@ Pillow==4.1.1
 plotly==2.0.15
 ply==3.10
 prompt-toolkit==1.0.13
-protobuf==3.3.0
+protobuf==3.15.0
 psdash==0.6.2
 psutil==5.2.1
 psycopg2==2.6.2
