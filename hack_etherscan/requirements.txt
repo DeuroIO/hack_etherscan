@@ -235,7 +235,7 @@ traits==4.6.0
 traitsui==5.1.0
 Twisted==17.5.0
 txaio==2.8.0
-ujson==1.35
+ujson==5.4.0
 unicodecsv==0.14.1
 uritemplate==3.0.0
 urllib3==1.22
