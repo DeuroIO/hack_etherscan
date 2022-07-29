@@ -128,7 +128,7 @@ MarkupSafe==0.23
 matplotlib==2.0.2
 mercurial==4.2
 migrate==0.3.8
-mistune==0.7.4
+mistune==2.0.3
 mpmath==0.19
 multipledispatch==0.4.9
 nbconvert==5.1.1
